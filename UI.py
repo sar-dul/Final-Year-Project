@@ -1,4 +1,6 @@
 import streamlit as st
+from helper import process_file, extract_pdf_text, get_sentences, get_embeddings
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Configure the page
 st.set_page_config(page_title="Plagiarism Detection System", layout="wide")
@@ -21,7 +23,7 @@ st.write("""
 
 # File upload section
 st.subheader("File Upload")
-uploaded_files = st.file_uploader("Upload your files (PDF or ZIP)", type=["pdf", "zip"], accept_multiple_files=True)
+uploaded_files = st.file_uploader("Upload your files (PDF or ZIP)", type=["pdf", "zip", "py"], accept_multiple_files=True)
 
 # Analysis button and progress indicator
 if uploaded_files:
@@ -50,5 +52,64 @@ if uploaded_files:
             file_name="plagiarism_report.txt",
             mime="text/plain"
         )
+
+        # Display the extracted text
+        text = extract_pdf_text(uploaded_files[0].read())
+        sentences = get_sentences(text)
+        st.write("No of sentences in Input: ", len(sentences))
+        embeddings_self = get_embeddings(sentences)
+        st.write("No of Embeddings for Input: ", len(embeddings_self))
+
+        # Display two existing texts
+        file1 = process_file("test_files/Test1.pdf")
+        text1 = next(iter(file1.values()))
+        sentences1 = get_sentences(text1)
+        embeddings_other_1 = get_embeddings(sentences1)
+
+        file2 = process_file("test_files/Test2.pdf")
+        text2 = next(iter(file2.values()))
+        sentences2 = get_sentences(text2)
+        embeddings_other_2 = get_embeddings(sentences2)
+
+        existing_files = [embeddings_other_1,  embeddings_other_2]
+
+        # Dictionary to track flagged sentences for plagiarism
+        flagged_sentence = {}
+
+        # List to store similarity metrics for all files compared
+        mult_file_similarity = []
+
+        # Iterate through each file in the existing_files list
+        for other_file in existing_files:
+            mult_sen_similarity = {}  # Dictionary to store similarities for the current file
+            for i, each_input in enumerate(embeddings_self):
+                each_sen_similarity = []  # List to store similarities for the current sentence
+                for j, each_output in enumerate(other_file):
+                    # Calculate cosine similarity between two sentences
+                    similarity = cosine_similarity([embeddings_self[each_input]], [other_file[each_output]])
+                    
+                    if similarity >= 0.9:
+                        # Flag the sentence as plagiarized if similarity is above the threshold
+                        flagged_sentence[each_input] = True  # Use each_input instead of sentences[i]
+                    elif each_input not in flagged_sentence:  # Check against each_input
+                        # If the sentence hasn't been flagged yet, set it as not plagiarized
+                        flagged_sentence[each_input] = False
+                    
+                    # Append the similarity score for the current sentence pair
+                    each_sen_similarity.append(similarity)
+
+                # Store all similarity scores for the current input sentence
+                mult_sen_similarity[i] = each_sen_similarity
+            
+            # Append the similarities for the current file to the list
+            mult_file_similarity.append(mult_sen_similarity)
+            
+
+        # Output the flagged sentences and their plagiarism status
+        st.write(flagged_sentence)
+        st.write(len(flagged_sentence))
+
+        
+
 else:
     st.info("Upload at least one PDF or ZIP file to begin analysis.")
