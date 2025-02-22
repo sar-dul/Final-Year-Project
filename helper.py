@@ -76,17 +76,55 @@ def read_python_file(file_content):
 
 #--------------------------------------- Text Extraction -------------------------------------------#
 
+
 #--------------------------------------- Embeddings -------------------------------------------#
 
+
+# Set up SSL context first
+import ssl
+import certifi
+ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
+
+# Then import nltk and download resources
+import nltk
+nltk.download('punkt')
+nltk.download('punkt_tab')  # Add this line
+nltk.download('wordnet')    # Sometimes needed for text processing
+
+# Rest of your imports
 from sentence_transformers import SentenceTransformer
+import re
+from nltk.tokenize import sent_tokenize
+
 
 # Load pre-trained SBERT model
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
 def get_sentences(text):
-    # Split text into sentences
-    text = text.split('.')  # Split by full stop
-    return [sen.strip() for sen in text[:-1]]
+    # Remove extra newlines but keep paragraph breaks
+    text = re.sub(r"\n+", " ", text)  # Replace multiple newlines with space
+    
+    # Remove extra spaces around punctuation
+    text = re.sub(r'\s+([.,!?])', r'\1', text)
+
+    # Fix broken words (e.g., "c hange" -> "change") using a basic pattern
+    text = re.sub(r'\b(\w)\s+(\w)\b', r'\1\2', text)
+
+    # Remove multiple spaces
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    # Tokenize into proper sentences
+    sentences = sent_tokenize(text)
+
+    # # Remove punctuation from each sentence
+    # sentences = [re.sub(r'[^\w\s]', '', sentence) for sentence in sentences]
+
+    return list(dict.fromkeys(sentences))
+
+    # text = text.split('.')  # Split by full stop
+    # return list(dict.fromkeys([sen.strip() for sen in text[:-1]]))
+
+
 
 def get_embeddings(sentences):
     embeddings = {}
@@ -101,8 +139,71 @@ def get_embeddings(sentences):
     return embeddings
 
 
-
 #--------------------------------------- Embeddings -------------------------------------------#
+
+
+
+#------------------------------------ PDF Highlighting ----------------------------------------#
+
+import fitz
+
+def highlight_plagiarized_text(file_bytes, plagiarized_sentences):
+    """Highlight plagiarized text in PDF bytes and return modified PDF bytes."""
+    doc = fitz.open(stream=file_bytes, filetype="pdf")
+    
+    for page in doc:
+        words = page.get_text("words")
+        if not words:
+            continue
+        
+        word_list = [(word[4].strip(), fitz.Rect(word[:4])) for word in words]
+        
+        for sentence in plagiarized_sentences:
+            sentence = sentence.strip()
+            if not sentence:
+                continue
+            sentence_words = sentence.split()
+            if not sentence_words:
+                continue
+
+            for i in range(len(word_list) - len(sentence_words) + 1):
+                match = True
+                for j in range(len(sentence_words)):
+                    if word_list[i + j][0] != sentence_words[j]:
+                        match = False
+                        break
+                if not match:
+                    continue
+
+                matched_sequence = word_list[i:i + len(sentence_words)]
+                line_groups = []
+                current_line = [matched_sequence[0][1]]
+                current_y0 = matched_sequence[0][1].y0
+
+                for k in range(1, len(matched_sequence)):
+                    word_rect = matched_sequence[k][1]
+                    if abs(word_rect.y0 - current_y0) < 1:
+                        current_line.append(word_rect)
+                    else:
+                        line_groups.append(current_line)
+                        current_line = [word_rect]
+                        current_y0 = word_rect.y0
+                line_groups.append(current_line)
+
+                for line in line_groups:
+                    combined_rect = line[0]
+                    for rect in line[1:]:
+                        combined_rect |= rect
+                    page.add_highlight_annot(combined_rect)
+
+    output_buffer = BytesIO()
+    doc.save(output_buffer)
+    doc.close()
+    return output_buffer.getvalue()
+
+
+
+#------------------------------------ PDF Highlighting ----------------------------------------#
 
 
 

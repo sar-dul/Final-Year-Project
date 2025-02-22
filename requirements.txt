@@ -1,0 +1,8 @@
+streamlit
+PdfReader
+PyPDF2
+PyMuPDF
+sentence_transformers
+nltk
+torch
+fitz
