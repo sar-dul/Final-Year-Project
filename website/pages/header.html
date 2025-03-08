@@ -1,0 +1,55 @@
+<head>
+	<link rel="stylesheet" href="/website/stylesheets/header.css" />
+</head>
+
+<div class="nav">
+    <div class="logo">
+    	<a href="#">
+    		<img src="#" alt="Logo Image" >
+    	</a>
+         </div>
+    <div class="hamburger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+    </div>
+    <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="">About Us</a></li>
+        
+        <div class="nav-buttons">       
+	  		<!-- Handling Buttons When Login/ Logout -->      
+
+	            <a href="#">
+	            	<button class="login-button">Login</button>
+	            </a>
+	        
+	            <a href="#">
+	            	<button class="register-button">Register</button>
+	            </a> 
+	              
+            
+        </div>
+        
+         
+     </ul>
+</div>
+
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navLinks = document.querySelector(".nav-links");
+        const links = document.querySelectorAll(".nav-links li");
+
+        hamburger.addEventListener('click', ()=>{
+            //Animate Links
+            navLinks.classList.toggle("open");
+            links.forEach(link => {
+                link.classList.toggle("fade");
+            });
+
+            //Hamburger Animation
+            hamburger.classList.toggle("toggle");
+        });
+    </script>
+</body>
