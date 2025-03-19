@@ -6,13 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title></title>
         <link rel="stylesheet" href="/website/frontend/stylesheets/index.css">
-        <link rel="stylesheet" type="text/css" href="/stylesheets/header.css" />
-        <link rel="stylesheet" type="text/css" href="/stylesheets/footer.css" /> 
     </head>
 
     <body>
 
-        <iframe id="header-frame" src="/website/frontend/pages/header.html"></iframe>
+        <div id="header"></div>
         
         <!-- Split Screen
         =============================== -->
@@ -44,14 +42,34 @@
             <!-- Most Popular (Card Slider)
         =============================== -->
 
-        <h2 class="section__header">OUR TOP MENTORS</h2>
+        <h2 class="section__header">OUR TOP USERS</h2>
         <div class="wrapper">
             <i id="left"> < </i>
             <ul class="carousel">
                 <li class="card">
                     <div class="img"><img src="#" alt="img" draggable="false"></div>
-                    <h2>${mentor.name}</h2>
-                    <span>${mentor.universityName}</span>
+                    <h2>Harvard University</h2>
+                    <span>Cambridge, MA</span>
+                </li>
+                <li class="card">
+                    <div class="img"><img src="#" alt="img" draggable="false"></div>
+                    <h2>Stanford University</h2>
+                    <span>Stanford, CA</span>
+                </li>
+                <li class="card">
+                    <div class="img"><img src="#" alt="img" draggable="false"></div>
+                    <h2>University of Oxford</h2>
+                    <span>Oxford, UK</span>
+                </li>
+                <li class="card">
+                    <div class="img"><img src="#" alt="img" draggable="false"></div>
+                    <h2>Princeton University</h2>
+                    <span>Princeton, NJ</span>
+                </li>
+                <li class="card">
+                    <div class="img"><img src="#" alt="img" draggable="false"></div>
+                    <h2>University of Cambridge</h2>
+                    <span>Cambridge, UK</span>
                 </li>
             </ul>
             <i id="right"> > </i>
@@ -133,6 +151,16 @@
 
         <!-- js -->
         <script>
+
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('pages/header.html')
+                    .then(response => response.text())
+                    .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                    });
+                });
+
+
             // ========= split screen javascript ========== //
             const content = document.querySelector(".content");
             const left = document.querySelector(".left");
@@ -238,7 +266,7 @@
             document.addEventListener("mouseup", dragStop);
             carousel.addEventListener("scroll", infiniteScroll);
             wrapper.addEventListener("mouseenter", () => clearTimeout(timeoutId));
-            wrapper.addEventListener("mouseleave", autoPlay);
+            wrapper.addEventListener("mouseleave", autoPlay);           
 
         </script>
     
