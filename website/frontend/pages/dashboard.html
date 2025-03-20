@@ -222,13 +222,134 @@
 
             <!-- MAIN UPLOAD-->
             <main id="upload">
-                <h1>This is Upload</h1>
+                <div  class="head-title">
+                    <div class="left">
+                        <h1>Upload Your Files</h1>
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="#">Dashboard</a>
+                            </li>
+                            <li><i class='bx bx-chevron-right' ></i></li>
+                            <li>
+                                <a class="active" href="#">Upload</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#" class="btn-download">
+                        <i class='bx bxs-cloud-download' ></i>
+                        <span class="text">Download PDF</span>
+                    </a>
+                </div>
+
+                <div class="container">
+                    <div class="header-section">
+                        <h1>Upload Files</h1>
+                        <p>Upload files you want to share with your team members.</p>
+                        <p>PDF, Images & Videos are allowed.</p>
+                    </div>
+                    <div class="drop-section">
+                        <div class="col">
+                            <div class="cloud-icon">
+                                <img src="icons/cloud.png" alt="cloud">
+                            </div>
+                            <span>Drag & Drop your files here</span>
+                            <span>OR</span>
+                            <button class="file-selector">Browse Files</button>
+                            <input type="file" class="file-selector-input" multiple>
+                        </div>
+                        <div class="col">
+                            <div class="drop-here">Drop Here</div>
+                        </div>
+                    </div>
+                    <div class="list-section">
+                        <div class="list-title">Uploaded Files</div>
+                        <div class="list"></div>
+                    </div>
+                </div>
             </main> 
             <!-- MAIN UPLOAD END-->
 
             <!-- MAIN HISTORY-->
             <main id="history">
-                <h1>This is History</h1>
+                <div  class="head-title">
+                    <div class="left">
+                        <h1>Welcome Your Name</h1>
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="#">Dashboard</a>
+                            </li>
+                            <li><i class='bx bx-chevron-right' ></i></li>
+                            <li>
+                                <a class="active" href="#">Home</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#" class="btn-download">
+                        <i class='bx bxs-cloud-download' ></i>
+                        <span class="text">Download PDF</span>
+                    </a>
+                </div>
+
+                <div class="table-data">
+                    <div class="order">
+                        <div class="head">
+                            <h3>Recent Checks</h3>
+                            <i class='bx bx-search' ></i>
+                            <i class='bx bx-filter' ></i>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Date</th>
+                                    <th>Plagiarism</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <img src="img/people.png">
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="img/people.png">
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="img/people.png">
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status process">Process</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="img/people.png">
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="img/people.png">
+                                        <p>John Doe</p>
+                                    </td>
+                                    <td>01-10-2021</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </main> 
             <!-- MAIN HISTORY END-->
 
@@ -237,87 +358,9 @@
         <!-- CONTENT -->
         
 
-        <script src="script.js"></script>
     </body>
 
-    <script>
-
-        function showSection(sectionId) {
-                    document.querySelectorAll('main').forEach(main => {
-                        if (['dashboard', 'upload', 'history'].includes(main.id)) {
-                            main.classList.remove('active');
-                        }
-                    });
-                    document.getElementById(sectionId).classList.add('active');
-                }
-
-
-        const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
-
-        allSideMenu.forEach(item=> {
-            const li = item.parentElement;
-
-            item.addEventListener('click', function () {
-                allSideMenu.forEach(i=> {
-                    i.parentElement.classList.remove('active');
-                })
-                li.classList.add('active');
-            })
-        });
-
-
-        // TOGGLE SIDEBAR
-        const menuBar = document.querySelector('#content nav .bx.bx-menu');
-        const sidebar = document.getElementById('sidebar');
-
-        menuBar.addEventListener('click', function () {
-            sidebar.classList.toggle('hide');
-        })
-
-
-        const searchButton = document.querySelector('#content nav form .form-input button');
-        const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
-        const searchForm = document.querySelector('#content nav form');
-
-        searchButton.addEventListener('click', function (e) {
-            if(window.innerWidth < 576) {
-                e.preventDefault();
-                searchForm.classList.toggle('show');
-                if(searchForm.classList.contains('show')) {
-                    searchButtonIcon.classList.replace('bx-search', 'bx-x');
-                } else {
-                    searchButtonIcon.classList.replace('bx-x', 'bx-search');
-                }
-            }
-        })
-
-
-        if(window.innerWidth < 768) {
-            sidebar.classList.add('hide');
-        } else if(window.innerWidth > 576) {
-            searchButtonIcon.classList.replace('bx-x', 'bx-search');
-            searchForm.classList.remove('show');
-        }
-
-
-        window.addEventListener('resize', function () {
-            if(this.innerWidth > 576) {
-                searchButtonIcon.classList.replace('bx-x', 'bx-search');
-                searchForm.classList.remove('show');
-            }
-        })
-
-
-        const switchMode = document.getElementById('switch-mode');
-
-        switchMode.addEventListener('change', function () {
-            if(this.checked) {
-                document.body.classList.add('dark');
-            } else {
-                document.body.classList.remove('dark');
-            }
-        })
-
+    <script src="/website/frontend/scripts/dashboard.js">
     </script>
 
 </html>
