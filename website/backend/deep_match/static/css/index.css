@@ -1,0 +1,425 @@
+@charset "UTF-8";
+
+
+/* Split Screen CSS
+=========================== */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    width: 100%;
+    height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  ion-icon {
+    font-size: 2vw; /* Responsive font size */
+  }
+  
+  .content {
+    position: relative;
+    width: 100%;
+    height: 90%;
+    transition: all 0.7s ease;
+    margin-bottom: 7rem;
+  }
+  
+  .split {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    transition: 0.7s all cubic-bezier(.87, .76, .33, .98);
+    overflow: hidden;
+  }
+  
+  .split.left {
+    left: 0;
+    background-size: cover;
+    background-position: center; 
+    color: darksalmon;;
+  }
+  
+  .split.right {
+    right: 0; 
+    background-size: cover; 
+    background-position: center; 
+    color: white;
+  }
+  
+  .hover-left .split.left {
+    width: 60%;
+  }
+  
+  .hover-left .split.right {
+    width: 40%;
+  }
+  
+  .hover-right .split.right {
+    width: 60%;
+  }
+  
+  .hover-right .split.left {
+    width: 40%;
+  }
+  
+  .text {
+    width: 60%; /* Adjusted for responsiveness */
+    position: absolute;
+    top: 45%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    transition: all 0.7s cubic-bezier(.87, .76, .33, .98);
+  }
+  
+  .text .subtitle {
+    font-size: 1.5vw; /* Responsive font size */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .text .title {
+    font-size: 80px; 
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.5vw; 
+    margin-top: 1vw; 
+    transition: all 0.7s ease;
+  }
+  
+  .text .desc {
+    font-size: 15px; 
+    font-weight: 300;
+    line-height: 2;
+    margin: 1vw 0 3vw 0; 
+    width: 40vw; 
+    transition: all 0.7s ease;
+  }
+  
+  .button {
+    font-size: 1.25rem; 
+    min-width: 8rem;
+    background: transparent;
+    color: #fff;
+    border: 0.2rem solid #fff; 
+    padding: 0.5rem; 
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    border-radius: 1.5rem; 
+    transition: all 0.7s ease;
+  }
+  .button:hover {
+    background: black;
+    color: #fff;
+    transition: all 0.7s ease;
+  }
+  
+  .hover-left .split.left .text {
+    transform: translate(-40%, -50%);
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  }
+  
+  .hover-left .split.right .text {
+    transform: translate(-40%, -50%);
+    
+  }
+  
+  .hover-right .split.right .text {
+    transform: translate(-60%, -50%);
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5); 
+  }
+  
+  .hover-right .split.left .text {
+    transform: translate(-45%, -50%);
+  }
+  
+  /* Media Query for smaller screens */
+  @media screen and (max-width: 768px) {
+    .content {
+        height: 70%; /* Adjust the height as needed */
+        transition: all 0.7s ease;
+    }
+    .text .title {
+      font-size: 50px;
+      transition: all 0.7s ease;
+    }
+    
+    .text .desc {
+      font-size: 10px;   
+      transition: all 0.7s ease;
+    }
+  }
+  
+
+
+  /* Card Slider CSS
+=========================== 
+===========================*/
+.wrapper {
+  max-width: 1100px;
+  margin: 0 auto; 
+  display: flex;
+  padding: 0 40px;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  width: 100%;
+  position: relative;
+  background-color: #6A6D78;
+}
+.wrapper i {
+  top: 50%;
+  height: 50px;
+  width: 50px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  position: absolute;
+  text-align: center;
+  line-height: 50px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.23);
+  transform: translateY(-50%);
+  transition: transform 0.1s linear;
+}
+.wrapper i:active{
+  transform: translateY(-50%) scale(0.85);
+}
+.wrapper i:first-child{
+  left: -22px;
+}
+.wrapper i:last-child{
+  right: -22px;
+}
+.wrapper .carousel{
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% / 3) - 12px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 16px;
+  border-radius: 8px;
+  margin-left: 35px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  transition: all 0.7s ease;
+}
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+.carousel.no-transition {
+  scroll-behavior: auto;
+}
+.carousel.dragging {
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+.carousel.dragging .card {
+  cursor: grab;
+  user-select: none;
+}
+.carousel :where(.card, .img) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.carousel .card {
+  scroll-snap-align: start;
+  height: 320px;
+  width: 85%;
+  list-style: none;
+  background: #fff;
+  border: black solid;
+  cursor: pointer;
+  padding-bottom: 15px;
+  flex-direction: column;
+  border-radius: 8px;
+  transition: all 0.7s ease;
+}
+.carousel .card:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); 
+  transition: all 0.3s ease; 
+  background-color: lightgrey;
+}
+
+.carousel .card .img {
+  background: black;
+  height: 148px;
+  width: 148px;
+  border-radius: 50%;
+}
+.card .img img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #fff;
+}
+.carousel .card h2 {
+  font-weight: 500;
+  font-size: 1.20rem;
+  margin: 30px 0 5px;
+}
+.carousel .card span {
+  color: #6A6D78;
+  font-size: 1rem;
+}
+
+@media screen and (max-width: 900px) {
+  .wrapper .carousel {
+    grid-auto-columns: calc((100% / 2) - 9px);
+    transition: all 0.7s ease;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrapper .carousel {
+    grid-auto-columns: 100%;
+    margin-left: 20vw;
+    transition: all 0.7s ease;
+  }
+  .carousel .card {
+    width: 70%;
+    transition: all 0.7s ease;
+  }
+}
+
+
+
+/* Why Join Us? CSS
+=========================== 
+===========================*/
+
+.section__header {
+  margin: 1rem;
+  font-size: 2.25rem;
+  font-weight: 600;
+  text-align: center;
+  color: black;
+}
+
+.join__image {
+  margin-top: 2rem;
+  position: relative;
+}
+
+.join__image img {
+  width: 70%;
+  display: flex;
+  margin-left: 15%;
+  border-radius: 10px;
+}
+
+.join__grid {
+  position: absolute;
+  bottom: -5rem;
+  width: calc(100% - 4rem);
+  padding: 2rem;
+  margin: 0 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  background-color: white;
+  border-radius: 10px;
+  border: black solid;
+}
+
+.join__card {
+  flex: 1 1 250px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.join__card span {
+  padding: 5px 12px;
+  font-size: 1.5rem;
+  color: black;
+  background-color: black;
+  border-radius: 5px;
+}
+.join__card h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: black;
+}
+
+.join__card p {
+  color: black;
+}
+
+@media  (width < 600px) {
+  .join__grid {
+    width: 100%;
+    margin: 0;
+    bottom: -5rem;
+  }
+}
+
+
+/* Join CSS
+=========================== 
+===========================*/
+.section__container {
+  max-width: 1400px;
+  margin: auto;
+  margin-bottom: 3rem;
+  padding: 5rem 1rem; 
+}
+.register__grid {
+  display: grid;
+  background-color: #b6b6b6;
+  border: black solid;
+  border-radius: 1rem;
+  margin: 3rem 0;
+}
+
+.register__content {
+  padding-block: 4rem;
+  padding-inline: 1rem;
+}
+
+.register__content h4 {
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 600;
+  line-height: 4rem;
+  color: black;
+}
+.register__image {
+  display: none;
+  height: 100%;
+}
+@media (width > 540px) {
+ .register__content {
+    padding-inline: 2rem;
+  }
+}
+@media (width > 768px) {
+  .register__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .register__content {
+    padding-block: 4rem;
+    padding-inline: 4rem 0;
+  }
+
+  .register__image {
+    display: block;
+    position: relative;
+    isolation: isolate;
+  }
+
+  .register__image img {
+    position: absolute;
+    max-width: 290px;
+    bottom: 0;
+    left: 65%;
+    transform: translateX(-50%);
+  }
+}
