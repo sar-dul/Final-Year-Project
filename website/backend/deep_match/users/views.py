@@ -7,10 +7,6 @@ from django.contrib.auth import get_user_model
 def index(request):
     return render(request, 'index.html')
 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth import get_user_model
-
 User = get_user_model()
 
 def register(request):
@@ -36,7 +32,7 @@ def register(request):
         messages.success(request, "Registration successful! Please log in.")
         return redirect('login')
 
-    return render(request, 'register.html')
+    return render(request, 'users/register.html')
 
 
 def login_view(request):
@@ -51,12 +47,12 @@ def login_view(request):
         else:
             messages.error(request, "Invalid email or password.")
 
-    return render(request, 'login.html')
+    return render(request, 'users/login.html')
 
 def welcome(request):
     # if not request.user.is_authenticated:
     #     return redirect('login')
-    return render(request, 'home.html', {'user': request.user})
+    return render(request, 'plagiarism/dashboard.html', {'user': request.user})
 
 def logout_view(request):
     logout(request)

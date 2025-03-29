@@ -17,12 +17,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from users import views
+from plagiarism import views as plagiarism_views
+
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
     path("", views.index, name="index"),
     path("register/", views.register, name="register"),
     path("login/", views.login_view, name="login"),
     path("welcome/", views.welcome, name="welcome"),
     path("logout/", views.logout_view, name="logout"), 
+    path('upload/', plagiarism_views.upload_file, name='upload_file'),
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
