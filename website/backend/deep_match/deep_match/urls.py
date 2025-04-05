@@ -31,6 +31,7 @@ urlpatterns = [
     path("welcome/", views.welcome, name="welcome"),
     path("logout/", views.logout_view, name="logout"), 
     path('upload/', plagiarism_views.upload_file, name='upload_file'),
+    path("result/<str:file_name>/", plagiarism_views.display_highlighted_pdf, name="display_highlighted_pdf"),
 
 ]
 

@@ -9,3 +9,4 @@ fitz
 pymilvus
 reportlab
 django
+plotly

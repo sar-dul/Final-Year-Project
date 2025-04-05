@@ -7,10 +7,8 @@ if hasattr(torch.classes, '__path__'):
     del torch.classes.__path__
     
 import streamlit as st
-from helper import process_file, extract_pdf_text, get_sentences, get_embeddings, highlight_plagiarized_text
-from sklearn.metrics.pairwise import cosine_similarity
+from helper import process_file, extract_pdf_text, get_sentences, get_embeddings, highlight_plagiarized_text, detect_plagiarism
 import base64
-from io import BytesIO
 
 # Configure the page
 st.set_page_config(page_title="Plagiarism Detection System", layout="wide")
@@ -54,24 +52,11 @@ if uploaded_files:
             sentences2 = get_sentences(text2)
             embeddings_other_2 = get_embeddings(sentences2)
 
-            # Plagiarism detection logic
-            flagged_sentences = {}
-            for other_file in [embeddings_other_1, embeddings_other_2]:
-                for i, input_sentence in enumerate(embeddings_self):
-                    max_similarity = 0
-                    for output_sentence in other_file:
-                        similarity = cosine_similarity(
-                            [embeddings_self[input_sentence]],
-                            [other_file[output_sentence]]
-                        )[0][0]
-                        if similarity > max_similarity:
-                            max_similarity = similarity
-                    if max_similarity >= 0.9:
-                        flagged_sentences[input_sentence] = True
-                    elif input_sentence not in flagged_sentences:
-                        flagged_sentences[input_sentence] = False
+            other_embeddings_list = [embeddings_other_1, embeddings_other_2]
 
-            plagiarized_sentences = [sentence for sentence, flag in flagged_sentences.items() if flag]
+            plagiarized_sentences = detect_plagiarism(embeddings_self, other_embeddings_list, similarity_threshold=0.9)
+
+            st.write("Plag Lengthth: ", len(plagiarized_sentences))
 
             st.write("Plagiarized Sentences:")
             for sentence in plagiarized_sentences:
@@ -80,20 +65,22 @@ if uploaded_files:
             # Highlight PDF
             if plagiarized_sentences:
                 highlighted_pdf = highlight_plagiarized_text(file_bytes, plagiarized_sentences)
-                
-                # Display PDF preview
-                st.subheader("Highlighted PDF Preview")
-                base64_pdf = base64.b64encode(highlighted_pdf).decode('utf-8')
-                pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800" type="application/pdf"></iframe>'
-                st.markdown(pdf_display, unsafe_allow_html=True)
 
-                # Download button
-                st.download_button(
-                    label="Download Highlighted PDF",
-                    data=highlighted_pdf,
-                    file_name="highlighted.pdf",
-                    mime="application/pdf"
-                )
+                # Ensure the PDF is not empty
+                if highlighted_pdf:
+                    # Display PDF preview
+                    base64_pdf = base64.b64encode(highlighted_pdf).decode('utf-8')
+                    print(f"Base64 PDF Preview String Length: {len(base64_pdf)}")  # Debugging line
+                    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800px" type="application/pdf"></iframe>'
+                    st.markdown(pdf_display, unsafe_allow_html=True)
+
+                    # Download button
+                    st.download_button(
+                        label="Download Highlighted PDF",
+                        data=highlighted_pdf,
+                        file_name="highlighted.pdf",
+                        mime="application/pdf"
+                    )
             else:
                 st.info("No plagiarized content found")
 

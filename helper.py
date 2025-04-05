@@ -142,6 +142,51 @@ def get_embeddings(sentences):
 #--------------------------------------- Embeddings -------------------------------------------#
 
 
+#--------------------------------------- Compare Similarity -------------------------------------------#
+
+from sklearn.metrics.pairwise import cosine_similarity
+
+def detect_plagiarism(embeddings_self, other_embeddings_list, similarity_threshold=0.9):
+    
+    flagged_sentences = {}
+
+    # Loop over all files in other embeddings list
+    for other_file in other_embeddings_list:
+        for i, input_sentence in enumerate(embeddings_self):
+            max_similarity = 0
+
+            # Compare each sentence from the self document with sentences from other documents
+            for output_sentence in other_file:
+                similarity = cosine_similarity(
+                    [embeddings_self[input_sentence]],
+                    [other_file[output_sentence]]
+                )[0][0]
+
+                if similarity > max_similarity:
+                    max_similarity = similarity
+
+            # Flag sentence as plagiarized if similarity is above threshold
+            if max_similarity >= similarity_threshold:
+                flagged_sentences[input_sentence] = True
+            elif input_sentence not in flagged_sentences:
+                flagged_sentences[input_sentence] = False
+
+    # Filter out plagiarized sentences
+    plagiarized_sentences = [sentence for sentence, flag in flagged_sentences.items() if flag]
+
+    # Calculate plagiarism percentage
+    total_sentences = len(embeddings_self)
+    plagiarized_count = len(plagiarized_sentences)
+    plagiarism_percentage = (plagiarized_count / total_sentences) * 100 if total_sentences > 0 else 0
+
+
+    return plagiarized_sentences, plagiarism_percentage
+
+
+
+#--------------------------------------- Compare Similarity -------------------------------------------#
+
+
 
 #------------------------------------ PDF Highlighting ----------------------------------------#
 

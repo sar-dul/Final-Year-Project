@@ -3,6 +3,8 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from .models import User
 from django.contrib.auth import get_user_model
+from plagiarism.models import PlagiarismReport
+import plotly.express as px
 
 def index(request):
     return render(request, 'index.html')
@@ -50,9 +52,61 @@ def login_view(request):
     return render(request, 'users/login.html')
 
 def welcome(request):
-    # if not request.user.is_authenticated:
-    #     return redirect('login')
-    return render(request, 'plagiarism/dashboard.html', {'user': request.user})
+
+    reports = PlagiarismReport.objects.filter(user=request.user).order_by('-uploaded_at')
+    total_reports = reports.count()
+
+    high_plag_reports = reports.filter(plagiarism_percent__gte=80)
+    mid_plag_reports = reports.filter(plagiarism_percent__gte=50, plagiarism_percent__lt=80)
+    low_plag_reports = reports.filter(plagiarism_percent__lt=50)
+
+    high_count = high_plag_reports.count()
+    mid_count = mid_plag_reports.count()
+    low_count = low_plag_reports.count()
+
+    bar_graph_data = {
+        'high': high_count,
+        'mid': mid_count,
+        'low': low_count
+    }
+
+    # Prepare the data for the chart
+    categories = ['High', 'Medium', 'Low']
+    counts = [bar_graph_data['high'], bar_graph_data['mid'], bar_graph_data['low']]
+
+    # Create a horizontal bar chart using Plotly Express
+    fig = px.bar(x=counts, y=categories, orientation='h',
+                title="Plagiarism Report Counts",
+                labels={'x': 'Number of Reports', 'y': 'Plagiarism Level'},
+                text=counts,  # Display count values inside the bars
+                color=categories,  # Color bars based on categories (discrete color)
+                color_discrete_sequence=['#A8DADC', '#FFE156', '#6A0572'])  # Custom discrete colors
+
+    # Add hover information and customize the bars
+    fig.update_traces(texttemplate='%{text}', textposition='inside', marker=dict(line=dict(color='black', width=1)))
+
+    # Customize layout for a cleaner appearance
+    fig.update_layout(
+        title_font_size=24,
+        title_x=0.5,  # Center the title
+        xaxis_title="Number of Reports",
+        yaxis_title="Plagiarism Level",
+        template="none",  # Remove default Plotly background template for a cleaner look
+        plot_bgcolor='rgba(0, 0, 0, 0)',  # Transparent plot background
+        paper_bgcolor='rgba(0, 0, 0, 0)',  # Transparent paper background
+        showlegend=False,  # Hide legend as it is unnecessary for this chart
+        margin=dict(l=100, r=50, t=50, b=50),  # Adjust margins for better spacing
+    )
+
+    # Render the chart as HTML
+    graph_html = fig.to_html(full_html=False)
+
+
+
+    if request.user.role == 'student':
+        return render(request, 'plagiarism/dashboard_student.html', {'user': request.user, 'reports': reports, 'total_reports': total_reports, 'bar_graph': graph_html})
+    else:
+        return render(request, 'plagiarism/dashboard_teacher.html', {'user': request.user, 'reports': reports})
 
 def logout_view(request):
     logout(request)
