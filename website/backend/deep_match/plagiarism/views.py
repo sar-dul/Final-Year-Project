@@ -78,13 +78,16 @@ def upload_file(request):
                 file_name=unique_filename,
                 uploaded_at=timezone.now(),
                 plagiarism_percent=plagiarism_percent,
-                highlighted_file_path=highlighted_pdf_path
+                highlighted_file_path=highlighted_pdf_path,
+                base64_pdf=base64_pdf,
             )
             
             return render(request, 'plagiarism/result.html', {
                 'file_url': fs.url(uploaded_file_path),
                 'highlighted_pdf_name': highlighted_pdf_name,
-                'base64_pdf': base64_pdf
+                'base64_pdf': base64_pdf,
+                'plagiarism_percent': plagiarism_percent,
+                'checked_date': timezone.now()
             })
     
     return render(request, 'plagiarism/dashboard.html')
@@ -121,3 +124,18 @@ def display_highlighted_pdf(request, file_name):
         return FileResponse(open(highlighted_pdf_path, "rb"), content_type="application/pdf")
     else:
         return render(request, "plagiarism/error.html", {"message": "File not found"})
+    
+
+from django.shortcuts import render, get_object_or_404
+
+def result_view(request, report_id):
+    report = get_object_or_404(PlagiarismReport, id=report_id,)
+
+    context = {
+        'checked_date': report.uploaded_at,
+        'plagiarism_percent': report.plagiarism_percent,
+        'highlighted_pdf_name': f"highlighted_{report.file_name}",
+        'base64_pdf': report.base64_pdf,
+    }
+
+    return render(request, 'plagiarism/result.html', context)

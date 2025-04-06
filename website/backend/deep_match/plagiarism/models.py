@@ -16,6 +16,7 @@ class PlagiarismReport(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     plagiarism_percent = models.FloatField()
     highlighted_file_path = models.CharField(max_length=255, null=True, blank=True)
+    base64_pdf = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.file_name} by {self.user.username} on {self.uploaded_at.strftime('%Y-%m-%d')}"

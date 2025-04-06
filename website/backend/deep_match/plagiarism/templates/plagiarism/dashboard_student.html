@@ -186,7 +186,11 @@
                         <td>{{ report.file_name }}</td>
                         <td>{{ report.uploaded_at|date:"d-m-Y" }}</td>
                         <td>{{ report.plagiarism_percent }} %</td>
-                        <td><span class="status completed">View Report -></span></td>
+                        <td>
+                            <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-outline-primary">
+                                View Report →
+                            </a>
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>

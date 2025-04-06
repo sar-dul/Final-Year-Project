@@ -1,13 +1,28 @@
 {% extends "plagiarism/result_template.html" %}
 
 {% block content %}
-    <h2>Plagiarism Report</h2>
+    <div class="report-container">
+        <h2 class="mb-4 text-center">Plagiarism Report</h2>
 
-    <!-- PDF Preview -->
-    <iframe src="data:application/pdf;base64,{{ base64_pdf }}" width="100%" height="800px"></iframe>
+        <!-- Checked Date -->
+        <p><strong>Checked Date:</strong> {{ checked_date }}</p>
 
-    <!-- Download Link -->
-    <a href="{% url 'display_highlighted_pdf' highlighted_pdf_name %}" class="btn btn-primary" download>
-        Download Highlighted PDF
-    </a>
+        <!-- Plagiarism Percentage -->
+        <p><strong>Plagiarism Detected:</strong> {{ plagiarism_percent }}%</p>
+
+        <!-- Highlighted PDF Preview -->
+        <div class="pdf-frame">
+            <iframe src="data:application/pdf;base64,{{ base64_pdf }}" width="100%" height="800px"></iframe>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-4 d-flex justify-content-between">
+            <a href="{% url 'display_highlighted_pdf' highlighted_pdf_name %}" class="btn btn-primary" download>
+                Download Highlighted PDF
+            </a>
+            <a href="/welcome" class="btn btn-secondary">
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
 {% endblock %}
