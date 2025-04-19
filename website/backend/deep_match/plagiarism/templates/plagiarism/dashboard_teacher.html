@@ -13,7 +13,6 @@
     <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}
 
-
 {% block sideBar %} 
     <a href="#" class="brand">
         <i class='bx bxs-smile'></i>
@@ -30,6 +29,12 @@
             <a href="#">
                 <i class='bx bxs-shopping-bag-alt'></i>
                 <span class="text">Upload</span>
+            </a>
+        </li>
+        <li onclick="showSection('checkPlag', this)">
+            <a href="#">
+                <i class='bx bxs-shopping-bag-alt'></i>
+                <span class="text">Group Check</span>
             </a>
         </li>
         <li onclick="showSection('history', this)">
@@ -188,6 +193,172 @@
                     <i class='bx bx-dots-vertical-rounded' ></i>
                 </li>
             </ul>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block mainUpload%}
+    <div  class="head-title">
+        <div class="left">
+            <h1>Upload Your Files</h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+                <li><i class='bx bx-chevron-right' ></i></li>
+                <li>
+                    <a class="active" href="#">Upload</a>
+                </li>
+            </ul>
+        </div>
+        <a href="#" class="btn-download">
+            <i class='bx bxs-cloud-download' ></i>
+            <span class="text">Download PDF</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>Upload Files</h1>
+            <p>Upload files you want to share with your team members.</p>
+            <p>PDF, Images & Videos are allowed.</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" action="{% url 'upload_files' %}">
+            {% csrf_token %}
+            <div class="drop-section">
+                <div class="col">
+                    <div class="cloud-icon">
+                        <img src="icons/cloud.png" alt="cloud">
+                    </div>
+                    <span>Drag & Drop your files here</span>
+                    <span>OR</span>
+                    <button type="button" class="file-selector">Browse Files</button>
+                    <input type="file" class="file-selector-input" name="file" multiple>
+                </div>
+                <div class="col">
+                    <div class="drop-here">Drop Here</div>
+                </div>
+            </div>
+            <div class="list-section">
+                <div class="list-title">Uploaded Files</div>
+                <div class="list"></div>
+            </div>
+            <button type="submit" class="">Upload Your Files</button>
+        </form>
+        
+    </div>
+{% endblock %}
+
+{% block mainCheck%}
+    <div  class="head-title">
+        <div class="left">
+            <h1>Mass Check Plagiarism</h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+                <li><i class='bx bx-chevron-right' ></i></li>
+                <li>
+                    <a class="active" href="#">Upload</a>
+                </li>
+            </ul>
+        </div>
+        <a href="#" class="btn-download">
+            <i class='bx bxs-cloud-download' ></i>
+            <span class="text">Download PDF</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>Mass Check Plag</h1>
+            <p>Upload files you want to share with your team members.</p>
+            <p>PDF, Images & Videos are allowed.</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" action="{% url 'check_file' %}">
+            {% csrf_token %}
+            <div class="drop-section">
+                <div class="col">
+                    <div class="cloud-icon">
+                        <img src="icons/cloud.png" alt="cloud">
+                    </div>
+                    <span>Drag & Drop your files here</span>
+                    <span>OR</span>
+                    <button type="button" class="file-selector">Browse Files</button>
+                    <input type="file" class="file-selector-input" name="file" multiple>
+                </div>
+                <div class="col">
+                    <div class="drop-here">Drop Here</div>
+                </div>
+            </div>
+            <div class="list-section">
+                <div class="list-title">Uploaded Files</div>
+                <div class="list"></div>
+            </div>
+            <button type="submit" class="">Check Plagiarism</button>
+        </form>
+        
+    </div>
+{% endblock %}
+
+{% block mainHistory%}
+    <div  class="head-title">
+        <div class="left">
+            <h1>Welcome Your Name</h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+                <li><i class='bx bx-chevron-right' ></i></li>
+                <li>
+                    <a class="active" href="#">Home</a>
+                </li>
+            </ul>
+        </div>
+        <a href="#" class="btn-download">
+            <i class='bx bxs-cloud-download' ></i>
+            <span class="text">Download PDF</span>
+        </a>
+    </div>
+
+    <div class="table-data">
+        <div class="order">
+            <div class="head">
+                <h3>Recent Checks</h3>
+                <i class='bx bx-search' ></i>
+                <i class='bx bx-filter' ></i>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Date</th>
+                        <th>Plagiarism</th>
+                        <th>Reports</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        <td>{{ report.file_name }}</td>
+                        <td>{{ report.uploaded_at|date:"d-m-Y" }}</td>
+                        <td>{{ report.plagiarism_percent }} %</td>
+                        <td>
+                            <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-outline-primary">
+                                View Report →
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No reports available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}

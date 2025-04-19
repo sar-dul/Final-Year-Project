@@ -109,7 +109,7 @@ function iconSelector(type){
 
 function showSection(sectionId) {
     document.querySelectorAll('main').forEach(main => {
-        if (['dashboard', 'upload', 'history'].includes(main.id)) {
+        if (['dashboard', 'upload', 'history', 'checkPlag'].includes(main.id)) {
             main.classList.remove('active');
         }
     });

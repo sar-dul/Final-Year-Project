@@ -9,9 +9,25 @@ from django.utils import timezone
 import time
 
 
-def upload_file(request):
-    print("Inside upload_file view")
-    
+def upload_files(request):
+    if request.method == 'POST' and request.FILES.getlist('file'):  # Check for multiple files
+        files = request.FILES.getlist('file')  # Get all uploaded files
+        file_urls = []  # List to store the URLs of uploaded files
+        
+        fs = FileSystemStorage()
+        
+        # Loop through the files and save each one
+        for uploaded_file in files:
+            filename = fs.save('existing_files/' + uploaded_file.name, uploaded_file)
+            file_url = fs.url(filename)
+            file_urls.append(file_url)
+
+        return redirect('/welcome')  # Redirect to /welcome after saving files
+
+    return render(request, 'dahboard.html')
+
+def check_single_file(request):
+    print("In check single file")
     if request.method == 'POST' and request.FILES.get('file'):
         uploaded_file = request.FILES['file']
         fs = FileSystemStorage()
@@ -34,22 +50,36 @@ def upload_file(request):
         sentences = get_sentences(text)
         embeddings_self = get_embeddings(sentences)
         
-        # Load comparison files from "existing_files" inside media/
-        file1_path = os.path.join(settings.MEDIA_ROOT, "existing_files/Test 1.pdf")
-        file2_path = os.path.join(settings.MEDIA_ROOT, "existing_files/Test 2.pdf")
-        
-        if not os.path.exists(file1_path) or not os.path.exists(file2_path):
-            return render(request, 'plagiarism/error.html', {"message": "Comparison files not found."})
-        
-        file1 = process_file(file1_path)
-        text1 = next(iter(file1.values()))
-        embeddings_other_1 = get_embeddings(get_sentences(text1))
-        
-        file2 = process_file(file2_path)
-        text2 = next(iter(file2.values()))
-        embeddings_other_2 = get_embeddings(get_sentences(text2))
-        
-        other_embeddings_list = [embeddings_other_1, embeddings_other_2]
+        # Define the path to the directory with existing files
+        existing_files_dir = os.path.join(settings.MEDIA_ROOT, "existing_files")
+
+        # Check if the directory exists
+        if not os.path.exists(existing_files_dir):
+            return render(request, 'plagiarism/error.html', {"message": "Comparison directory not found."})
+
+        # Get a list of all PDF files in the directory
+        pdf_files = [f for f in os.listdir(existing_files_dir) if f.lower().endswith('.pdf')]
+
+        # Check if there are any PDF files to process
+        if not pdf_files:
+            return render(request, 'plagiarism/error.html', {"message": "No PDF files found in the comparison directory."})
+
+        # Initialize a list to store embeddings
+        other_embeddings_list = []
+
+        # Process each PDF file
+        for pdf_filename in pdf_files:
+            file_path = os.path.join(existing_files_dir, pdf_filename)
+            
+            # Process the file and extract text
+            file = process_file(file_path)
+            text = next(iter(file.values()))
+            
+            # Generate embeddings from sentences in the text
+            embeddings = get_embeddings(get_sentences(text))
+            
+            # Append the embeddings to the list
+            other_embeddings_list.append(embeddings)
         
         # Detect plagiarism
         plagiarized_sentences, plagiarism_percent = detect_plagiarism(embeddings_self, other_embeddings_list, similarity_threshold=0.9)
@@ -92,7 +122,8 @@ def upload_file(request):
     
     return render(request, 'plagiarism/dashboard.html')
 
-def upload_multiple_files(request):
+
+def check_multiple_files(request):
     if request.method == 'POST' and request.FILES.getlist('file'):  # Check for multiple files
         files = request.FILES.getlist('file')  # Get all uploaded files
         file_urls = []  # List to store the URLs of uploaded files
