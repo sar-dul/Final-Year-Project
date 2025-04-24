@@ -31,8 +31,8 @@
                 <span class="text">Upload</span>
             </a>
         </li>
-        <li onclick="showSection('checkPlag', this)">
-            <a href="#">
+        <li>
+            <a href="{% url 'multiple_check' %}">
                 <i class='bx bxs-shopping-bag-alt'></i>
                 <span class="text">Group Check</span>
             </a>
@@ -235,7 +235,7 @@
                     <span>Drag & Drop your files here</span>
                     <span>OR</span>
                     <button type="button" class="file-selector">Browse Files</button>
-                    <input type="file" class="file-selector-input" name="file" multiple>
+                    <input type="file" class="file-selector-input" name="file" multiple accept=".py, .pdf">
                 </div>
                 <div class="col">
                     <div class="drop-here">Drop Here</div>
@@ -249,60 +249,9 @@
         </form>
         
     </div>
+    
 {% endblock %}
 
-{% block mainCheck%}
-    <div  class="head-title">
-        <div class="left">
-            <h1>Mass Check Plagiarism</h1>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="#">Dashboard</a>
-                </li>
-                <li><i class='bx bx-chevron-right' ></i></li>
-                <li>
-                    <a class="active" href="#">Upload</a>
-                </li>
-            </ul>
-        </div>
-        <a href="#" class="btn-download">
-            <i class='bx bxs-cloud-download' ></i>
-            <span class="text">Download PDF</span>
-        </a>
-    </div>
-
-    <div class="container">
-        <div class="header-section">
-            <h1>Mass Check Plag</h1>
-            <p>Upload files you want to share with your team members.</p>
-            <p>PDF, Images & Videos are allowed.</p>
-        </div>
-
-        <form method="POST" enctype="multipart/form-data" action="{% url 'check_file' %}">
-            {% csrf_token %}
-            <div class="drop-section">
-                <div class="col">
-                    <div class="cloud-icon">
-                        <img src="icons/cloud.png" alt="cloud">
-                    </div>
-                    <span>Drag & Drop your files here</span>
-                    <span>OR</span>
-                    <button type="button" class="file-selector">Browse Files</button>
-                    <input type="file" class="file-selector-input" name="file" multiple>
-                </div>
-                <div class="col">
-                    <div class="drop-here">Drop Here</div>
-                </div>
-            </div>
-            <div class="list-section">
-                <div class="list-title">Uploaded Files</div>
-                <div class="list"></div>
-            </div>
-            <button type="submit" class="">Check Plagiarism</button>
-        </form>
-        
-    </div>
-{% endblock %}
 
 {% block mainHistory%}
     <div  class="head-title">

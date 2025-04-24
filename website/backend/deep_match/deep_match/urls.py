@@ -34,6 +34,8 @@ urlpatterns = [
     path('check/', plagiarism_views.check_single_file, name='check_file'),
     path("result/<str:file_name>/", plagiarism_views.display_highlighted_pdf, name="display_highlighted_pdf"),
     path('report/<str:report_id>/', plagiarism_views.result_view, name='view_report'),
+    path('mulitple_check/', plagiarism_views.go_to_multiple_check, name='multiple_check'),
+    path('check_multiple_files/', plagiarism_views.check_multiple_files, name='check_multiple_files'),
 ]
 
 if settings.DEBUG:

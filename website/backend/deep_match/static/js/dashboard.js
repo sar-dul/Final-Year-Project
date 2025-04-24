@@ -8,25 +8,21 @@ const fileSelectorInput = document.querySelector('.file-selector-input')
 fileSelector.onclick = () => fileSelectorInput.click()
 fileSelectorInput.onchange = () => {
     [...fileSelectorInput.files].forEach((file) => {
-        if(typeValidation(file.type)){
-            uploadFile(file)
-        }
+        uploadFile(file)
     })
 }
 
 // when file is over the drag area
 dropArea.ondragover = (e) => {
     e.preventDefault();
-    [...e.dataTransfer.items].forEach((item) => {
-        if(typeValidation(item.type)){
-            dropArea.classList.add('drag-over-effect')
-        }
-    })
+    dropArea.classList.add('drag-over-effect')
 }
+
 // when file leave the drag area
 dropArea.ondragleave = () => {
     dropArea.classList.remove('drag-over-effect')
 }
+
 // when file drop on the drag area
 dropArea.ondrop = (e) => {
     e.preventDefault();
@@ -35,26 +31,13 @@ dropArea.ondrop = (e) => {
         [...e.dataTransfer.items].forEach((item) => {
             if(item.kind === 'file'){
                 const file = item.getAsFile();
-                if(typeValidation(file.type)){
-                    uploadFile(file)
-                }
-            }
-        })
-    }else{
-        [...e.dataTransfer.files].forEach((file) => {
-            if(typeValidation(file.type)){
                 uploadFile(file)
             }
         })
-    }
-}
-
-
-// check the file type
-function typeValidation(type){
-    var splitType = type.split('/')[0]
-    if(type == 'application/pdf' || splitType == 'image' || splitType == 'video'){
-        return true
+    } else {
+        [...e.dataTransfer.files].forEach((file) => {
+            uploadFile(file)
+        })
     }
 }
 
@@ -65,7 +48,7 @@ function uploadFile(file){
     li.classList.add('in-prog')
     li.innerHTML = `
         <div class="col">
-            <img src="icons/${iconSelector(file.type)}" alt="">
+            <img src="icons/default.png" alt="">
         </div>
         <div class="col">
             <div class="file-name">
@@ -82,6 +65,7 @@ function uploadFile(file){
             <svg xmlns="http://www.w3.org/2000/svg" class="tick" height="20" width="20"><path d="m8.229 14.438-3.896-3.917 1.438-1.438 2.458 2.459 6-6L15.667 7Z"/></svg>
         </div>
     `
+    
     listContainer.prepend(li)
     var http = new XMLHttpRequest()
     var data = new FormData()
@@ -100,12 +84,6 @@ function uploadFile(file){
     li.querySelector('.cross').onclick = () => http.abort()
     http.onabort = () => li.remove()
 }
-// find icon for file
-function iconSelector(type){
-    var splitType = (type.split('/')[0] == 'application') ? type.split('/')[1] : type.split('/')[0];
-    return splitType + '.png'
-}
-
 
 function showSection(sectionId) {
     document.querySelectorAll('main').forEach(main => {
@@ -116,69 +94,63 @@ function showSection(sectionId) {
     document.getElementById(sectionId).classList.add('active');
 }
 
-
 const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
 
-allSideMenu.forEach(item=> {
-const li = item.parentElement;
+allSideMenu.forEach(item => {
+    const li = item.parentElement;
 
-item.addEventListener('click', function () {
-allSideMenu.forEach(i=> {
-    i.parentElement.classList.remove('active');
-})
-li.classList.add('active');
-})
+    item.addEventListener('click', function () {
+        allSideMenu.forEach(i => {
+            i.parentElement.classList.remove('active');
+        })
+        li.classList.add('active');
+    })
 });
-
 
 // TOGGLE SIDEBAR
 const menuBar = document.querySelector('#content nav .bx.bx-menu');
 const sidebar = document.getElementById('sidebar');
 
 menuBar.addEventListener('click', function () {
-sidebar.classList.toggle('hide');
+    sidebar.classList.toggle('hide');
 })
-
 
 const searchButton = document.querySelector('#content nav form .form-input button');
 const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
 const searchForm = document.querySelector('#content nav form');
 
 searchButton.addEventListener('click', function (e) {
-if(window.innerWidth < 576) {
-e.preventDefault();
-searchForm.classList.toggle('show');
-if(searchForm.classList.contains('show')) {
-    searchButtonIcon.classList.replace('bx-search', 'bx-x');
-} else {
-    searchButtonIcon.classList.replace('bx-x', 'bx-search');
-}
-}
+    if(window.innerWidth < 576) {
+        e.preventDefault();
+        searchForm.classList.toggle('show');
+        if(searchForm.classList.contains('show')) {
+            searchButtonIcon.classList.replace('bx-search', 'bx-x');
+        } else {
+            searchButtonIcon.classList.replace('bx-x', 'bx-search');
+        }
+    }
 })
-
 
 if(window.innerWidth < 768) {
-sidebar.classList.add('hide');
+    sidebar.classList.add('hide');
 } else if(window.innerWidth > 576) {
-searchButtonIcon.classList.replace('bx-x', 'bx-search');
-searchForm.classList.remove('show');
+    searchButtonIcon.classList.replace('bx-x', 'bx-search');
+    searchForm.classList.remove('show');
 }
-
 
 window.addEventListener('resize', function () {
-if(this.innerWidth > 576) {
-searchButtonIcon.classList.replace('bx-x', 'bx-search');
-searchForm.classList.remove('show');
-}
+    if(this.innerWidth > 576) {
+        searchButtonIcon.classList.replace('bx-x', 'bx-search');
+        searchForm.classList.remove('show');
+    }
 })
-
 
 const switchMode = document.getElementById('switch-mode');
 
 switchMode.addEventListener('change', function () {
-if(this.checked) {
-document.body.classList.add('dark');
-} else {
-document.body.classList.remove('dark');
-}
+    if(this.checked) {
+        document.body.classList.add('dark');
+    } else {
+        document.body.classList.remove('dark');
+    }
 })
