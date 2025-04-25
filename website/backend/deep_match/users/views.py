@@ -102,11 +102,34 @@ def welcome(request):
     graph_html = fig.to_html(full_html=False)
 
 
+    teacher_reports = PlagiarismReport.objects.filter(user=request.user).select_related('session').order_by('-uploaded_at')
+
+    from collections import defaultdict
+
+    # Group by session
+    report_data = defaultdict(list)
+    for report in teacher_reports:
+        if report.session:
+            report_data[report.session].append(report)
+
+    # Prepare summary data
+    report_summary = []
+    for session, reports in report_data.items():
+        report_summary.append({
+            'session_name': str(session),  # Customize if session has name
+            'session_id': session.id,
+            'report_count': len(reports),
+            'date': reports[0].uploaded_at.strftime('%Y-%m-%d'),
+            'reports': reports,
+        })
+
+    # Sort by date (latest first)
+    report_summary.sort(key=lambda x: x['date'], reverse=True)
 
     if request.user.role == 'student':
         return render(request, 'plagiarism/dashboard_student.html', {'user': request.user, 'reports': reports, 'total_reports': total_reports, 'bar_graph': graph_html})
     else:
-        return render(request, 'plagiarism/dashboard_teacher.html', {'user': request.user, 'reports': reports})
+        return render(request, 'plagiarism/dashboard_teacher.html', {'user': request.user, 'report_summary': report_summary})
 
 def logout_view(request):
     logout(request)

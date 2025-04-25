@@ -14,6 +14,9 @@ def go_to_multiple_check(request):
 def go_to_dashboard(request):
     return redirect('welcome')
 
+def go_to_report(request):
+    return render(request, 'plagiarism/report_template.html')
+
 def upload_files(request):
     if request.method == 'POST' and request.FILES.getlist('file'):  # Check for multiple files
         files = request.FILES.getlist('file')  # Get all uploaded files
@@ -29,7 +32,15 @@ def upload_files(request):
 
         return redirect('/welcome')  # Redirect to /welcome after saving files
 
-    return render(request, 'dahboard.html')
+    return render(request, 'dashboard.html')
+
+def multiple_report_view(request, session_id):
+
+    print("\\\nIn multiple report view\\\n")
+    session = PlagiarismSession.objects.get(id=session_id)
+    reports = PlagiarismReport.objects.filter(session=session)
+
+    return render(request, 'plagiarism/report.html', {'reports': reports})
 
 def check_single_file(request):
     print("In check single file")
@@ -223,9 +234,11 @@ def check_multiple_files(request):
                     base64_pdf=base64_pdf,
                 )   
 
-                print(f"\n\n\nFile {unique_filename} processed and saved with session.\n\n\n")
+            reports = PlagiarismReport.objects.filter(session=session)
 
-        return redirect('welcome')
+        return render(request, 'plagiarism/report.html', {'reports': reports})
+    
+    return redirect('welcome')
 
 from django.http import FileResponse
 

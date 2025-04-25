@@ -276,27 +276,27 @@
     <div class="table-data">
         <div class="order">
             <div class="head">
-                <h3>Recent Checks</h3>
+                <h3>Recent Checks for teacher</h3>
                 <i class='bx bx-search' ></i>
                 <i class='bx bx-filter' ></i>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th>File Name</th>
+                        <th>Report Name</th>
                         <th>Date</th>
-                        <th>Plagiarism</th>
+                        <th>No of files</th>
                         <th>Reports</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for report in reports %}
+                    {% for report in report_summary %}
                     <tr>
-                        <td>{{ report.file_name }}</td>
-                        <td>{{ report.uploaded_at|date:"d-m-Y" }}</td>
-                        <td>{{ report.plagiarism_percent }} %</td>
+                        <td>{{ report.session_name }}</td>
+                        <td>{{ report.date }}</td>
+                        <td>{{ report.report_count }}</td>
                         <td>
-                            <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-outline-primary">
+                            <a href="{% url 'multiple_report' report.session_id%}" class="btn btn-sm btn-outline-primary">
                                 View Report →
                             </a>
                         </td>

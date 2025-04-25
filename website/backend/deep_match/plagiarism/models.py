@@ -13,6 +13,7 @@ class UploadedFile(models.Model):
 class PlagiarismSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     submitted_at = models.DateTimeField(auto_now_add=True)
+    id = models.AutoField(primary_key=True)
 
     def __str__(self):
         return f"Session by {self.user.username} on {self.submitted_at.strftime('%Y-%m-%d %H:%M:%S')}"

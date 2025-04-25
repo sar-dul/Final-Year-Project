@@ -1,0 +1,37 @@
+{% extends "plagiarism/report_template.html" %}
+
+{% block title %}Plagiarism Report{% endblock %}
+
+{% block content %}
+    <table class="report-table">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Date</th>
+                <th>Plagiarism</th>
+                <th>Reports</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+                <tr>
+                    <td>{{ report.file_name }}</td>
+                    <td>{{ report.uploaded_at }}</td>
+                    <td class="plagiarism-percent 
+                        {% if report.plagiarism < 10 %}plagiarism-low
+                        {% elif report.plagiarism < 30 %}plagiarism-medium
+                        {% else %}plagiarism-high{% endif %}">
+                        {{ report.plagiarism_percent }}%
+                    </td>
+                    <td><a href="{% url 'view_report' report.id%}" class="report-btn">View Report</a></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No reports available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/welcome" class="back-btn">Back to Dashboard</a>
+{% endblock %}

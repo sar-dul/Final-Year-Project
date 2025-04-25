@@ -36,6 +36,8 @@ urlpatterns = [
     path('report/<str:report_id>/', plagiarism_views.result_view, name='view_report'),
     path('mulitple_check/', plagiarism_views.go_to_multiple_check, name='multiple_check'),
     path('check_multiple_files/', plagiarism_views.check_multiple_files, name='check_multiple_files'),
+    path('check_mult_report', plagiarism_views.go_to_report, name='check_mult_report'),
+    path('teacher_report/<str:session_id>/', plagiarism_views.multiple_report_view, name='multiple_report'),
 ]
 
 if settings.DEBUG:
