@@ -5,6 +5,7 @@ from .models import User
 from django.contrib.auth import get_user_model
 from plagiarism.models import PlagiarismReport
 import plotly.express as px
+import pandas as pd
 
 def index(request):
     return render(request, 'index.html')
@@ -103,6 +104,7 @@ def welcome(request):
 
 
     teacher_reports = PlagiarismReport.objects.filter(user=request.user).select_related('session').order_by('-uploaded_at')
+    total_teacher_reports = teacher_reports.count()
 
     from collections import defaultdict
 
@@ -114,7 +116,13 @@ def welcome(request):
 
     # Prepare summary data
     report_summary = []
+    pdf_count = 0
+    py_count = 0 
     for session, reports in report_data.items():
+
+        pdf_count += sum(1 for report in reports if report.file_name.lower().endswith('.pdf'))
+        py_count += sum(1 for report in reports if report.file_name.lower().endswith('.py'))
+
         report_summary.append({
             'session_name': str(session),  # Customize if session has name
             'session_id': session.id,
@@ -123,13 +131,25 @@ def welcome(request):
             'reports': reports,
         })
 
+    # prepare data
+    data = {
+        'File Type': ['Python Files', 'PDF Files'],
+        'Count': [py_count, pdf_count]
+    }
+
+    df = pd.DataFrame(data)
+
+    # create bar plot
+    fig_teacher = px.bar(df, x='File Type', y='Count', title='File Counts')
+    graph_html_teacher = fig_teacher.to_html(full_html=False)
+
     # Sort by date (latest first)
     report_summary.sort(key=lambda x: x['date'], reverse=True)
 
     if request.user.role == 'student':
         return render(request, 'plagiarism/dashboard_student.html', {'user': request.user, 'reports': student_reports, 'total_reports': total_reports, 'bar_graph': graph_html})
     else:
-        return render(request, 'plagiarism/dashboard_teacher.html', {'user': request.user, 'report_summary': report_summary})
+        return render(request, 'plagiarism/dashboard_teacher.html', {'user': request.user, 'report_summary': report_summary, 'total_teacher_reports': total_teacher_reports, 'bar_graph_teacher': graph_html_teacher})
 
 def logout_view(request):
     logout(request)

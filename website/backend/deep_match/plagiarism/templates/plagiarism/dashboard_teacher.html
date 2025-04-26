@@ -85,15 +85,15 @@
         <li>
             <i class='bx bxs-calendar-check' ></i>
             <span class="text">
-                <h3>Upload File</h3>
-                <p>[Go to Upload]</p>
+                <h3>Check Plagiarisme</h3>
+                <p>[Go to Checker]</p>
             </span>
         </li>
         <li>
             <i class='bx bxs-group' ></i>
             <span class="text">
-                <h3>Total Checks</h3>
-                <p>21 Files</p>
+                <h3>Total Reports</h3>
+                <p>{{ total_teacher_reports }} Report</p>
             </span>
         </li>
         <li>
@@ -116,52 +116,23 @@
             <table>
                 <thead>
                     <tr>
-                        <th>File Name</th>
+                        <th>Report Name</th>
                         <th>Date</th>
-                        <th>Plagiarism</th>
+                        <th>No of Files</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for report in report_summary %}
                     <tr>
-                        <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
-                        </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status completed">Completed</span></td>
+                        <td>{{ report.session_name }}</td>
+                        <td>{{ report.date }}</td>
+                        <td>{{ report.report_count }}</td>
                     </tr>
+                    {% empty %}
                     <tr>
-                        <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
-                        </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status pending">Pending</span></td>
+                        <td colspan="3">No reports available.</td>
                     </tr>
-                    <tr>
-                        <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
-                        </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status process">Process</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
-                        </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status pending">Pending</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="img/people.png">
-                            <p>John Doe</p>
-                        </td>
-                        <td>01-10-2021</td>
-                        <td><span class="status completed">Completed</span></td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -171,28 +142,7 @@
                 <i class='bx bx-plus' ></i>
                 <i class='bx bx-filter' ></i>
             </div>
-            <ul class="todo-list">
-                <li class="completed">
-                    <p>Todo List</p>
-                    <i class='bx bx-dots-vertical-rounded' ></i>
-                </li>
-                <li class="completed">
-                    <p>Todo List</p>
-                    <i class='bx bx-dots-vertical-rounded' ></i>
-                </li>
-                <li class="not-completed">
-                    <p>Todo List</p>
-                    <i class='bx bx-dots-vertical-rounded' ></i>
-                </li>
-                <li class="completed">
-                    <p>Todo List</p>
-                    <i class='bx bx-dots-vertical-rounded' ></i>
-                </li>
-                <li class="not-completed">
-                    <p>Todo List</p>
-                    <i class='bx bx-dots-vertical-rounded' ></i>
-                </li>
-            </ul>
+            {{ bar_graph_teacher|safe }}
         </div>
     </div>
 {% endblock %}
