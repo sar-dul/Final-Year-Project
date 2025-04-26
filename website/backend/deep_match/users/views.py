@@ -53,12 +53,12 @@ def login_view(request):
 
 def welcome(request):
 
-    reports = PlagiarismReport.objects.filter(user=request.user).order_by('-uploaded_at')
-    total_reports = reports.count()
+    student_reports = PlagiarismReport.objects.filter(user=request.user).order_by('-uploaded_at')
+    total_reports = student_reports.count()
 
-    high_plag_reports = reports.filter(plagiarism_percent__gte=80)
-    mid_plag_reports = reports.filter(plagiarism_percent__gte=50, plagiarism_percent__lt=80)
-    low_plag_reports = reports.filter(plagiarism_percent__lt=50)
+    high_plag_reports = student_reports.filter(plagiarism_percent__gte=80)
+    mid_plag_reports = student_reports.filter(plagiarism_percent__gte=50, plagiarism_percent__lt=80)
+    low_plag_reports = student_reports.filter(plagiarism_percent__lt=50)
 
     high_count = high_plag_reports.count()
     mid_count = mid_plag_reports.count()
@@ -127,7 +127,7 @@ def welcome(request):
     report_summary.sort(key=lambda x: x['date'], reverse=True)
 
     if request.user.role == 'student':
-        return render(request, 'plagiarism/dashboard_student.html', {'user': request.user, 'reports': reports, 'total_reports': total_reports, 'bar_graph': graph_html})
+        return render(request, 'plagiarism/dashboard_student.html', {'user': request.user, 'reports': student_reports, 'total_reports': total_reports, 'bar_graph': graph_html})
     else:
         return render(request, 'plagiarism/dashboard_teacher.html', {'user': request.user, 'report_summary': report_summary})
 

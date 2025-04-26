@@ -8,7 +8,7 @@ const fileSelectorInput = document.querySelector('.file-selector-input')
 fileSelector.onclick = () => fileSelectorInput.click()
 fileSelectorInput.onchange = () => {
     [...fileSelectorInput.files].forEach((file) => {
-        if(typeValidation(file.type)){
+        if(typeValidation(file.type, file.name)){
             uploadFile(file)
         }
     })
@@ -18,7 +18,7 @@ fileSelectorInput.onchange = () => {
 dropArea.ondragover = (e) => {
     e.preventDefault();
     [...e.dataTransfer.items].forEach((item) => {
-        if(typeValidation(item.type)){
+        if(typeValidation(item.type, item.name)){
             dropArea.classList.add('drag-over-effect')
         }
     })
@@ -35,14 +35,14 @@ dropArea.ondrop = (e) => {
         [...e.dataTransfer.items].forEach((item) => {
             if(item.kind === 'file'){
                 const file = item.getAsFile();
-                if(typeValidation(file.type)){
+                if(typeValidation(file.type, file.name)){
                     uploadFile(file)
                 }
             }
         })
     }else{
         [...e.dataTransfer.files].forEach((file) => {
-            if(typeValidation(file.type)){
+            if(typeValidation(file.type, file.name)){
                 uploadFile(file)
             }
         })
@@ -50,12 +50,19 @@ dropArea.ondrop = (e) => {
 }
 
 
-// check the file type
-function typeValidation(type){
-    var splitType = type.split('/')[0]
-    if(type == 'application/pdf' || splitType == 'image' || splitType == 'video'){
-        return true
-    }
+function typeValidation(type, name){
+    const splitType = type.split('/')[0];
+    const extension = name.split('.').pop().toLowerCase();
+
+    return (
+        type === 'application/pdf' ||
+        type === 'application/zip' ||
+        type === 'text/x-python' ||
+        extension === 'py' ||
+        extension === 'ipynb' ||
+        splitType === 'image' ||
+        splitType === 'video'
+    );
 }
 
 // upload file function

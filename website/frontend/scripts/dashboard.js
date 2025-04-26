@@ -10,7 +10,7 @@ fileSelectors.forEach((btn, index) => {
 
     fileSelectorInputs[index].onchange = () => {
         [...fileSelectorInputs[index].files].forEach((file) => {
-            if (typeValidation(file.type)) {
+            if (typeValidation(file.type, file.name)) {
                 uploadFile(file, listSections[index], listContainers[index])
             }
         })
@@ -22,7 +22,7 @@ dropAreas.forEach((dropArea, index) => {
     dropArea.ondragover = (e) => {
         e.preventDefault();
         [...e.dataTransfer.items].forEach((item) => {
-            if (typeValidation(item.type)) {
+            if (typeValidation(item.type, item.name)) {
                 dropArea.classList.add('drag-over-effect')
             }
         })
@@ -39,14 +39,14 @@ dropAreas.forEach((dropArea, index) => {
             [...e.dataTransfer.items].forEach((item) => {
                 if (item.kind === 'file') {
                     const file = item.getAsFile()
-                    if (typeValidation(file.type)) {
+                    if (typeValidation(file.type, file.name)) {
                         uploadFile(file, listSections[index], listContainers[index])
                     }
                 }
             })
         } else {
             [...e.dataTransfer.files].forEach((file) => {
-                if (typeValidation(file.type)) {
+                if (typeValidation(file.type, file.name)) {
                     uploadFile(file, listSections[index], listContainers[index])
                 }
             })
@@ -55,9 +55,19 @@ dropAreas.forEach((dropArea, index) => {
 })
 
 // check the file type
-function typeValidation(type) {
-    var splitType = type.split('/')[0]
-    return type === 'application/pdf' || splitType === 'image' || splitType === 'video'
+function typeValidation(type, name){
+    const splitType = type.split('/')[0];
+    const extension = name.split('.').pop().toLowerCase();
+
+    return (
+        type === 'application/pdf' ||
+        type === 'application/zip' ||
+        type === 'text/x-python' ||
+        extension === 'py' ||
+        extension === 'ipynb' ||
+        splitType === 'image' ||
+        splitType === 'video'
+    );
 }
 
 // select the icon for file type

@@ -251,4 +251,84 @@ def highlight_plagiarized_text(file_bytes, plagiarized_sentences):
 #------------------------------------ PDF Highlighting ----------------------------------------#
 
 
+#------------------------------------ Code Plagiarsim ----------------------------------------#
+
+def process_code(input_string):
+    # Split the string by newline, strip whitespace from each line and filter out empty lines
+    return [line.strip() for line in input_string.split('\n') if line.strip()]
+
+
+
+def detect_code_plagiarism(embeddings_code_self, other_embeddings_list, similarity_threshold=0.9):
+    flagged_codes = {}
+
+    # Compare input codes with existing code files
+    for other_file in other_embeddings_list:
+        for i, input_code in enumerate(embeddings_code_self):
+            max_similarity = 0
+            for output_code in other_file:
+                # Compute cosine similarity
+                similarity = cosine_similarity(
+                    [embeddings_code_self[input_code]],
+                    [other_file[output_code]]
+                )[0][0]  # Extract scalar value
+                if similarity > max_similarity:
+                    max_similarity = similarity
+            # Flag sentences with similarity >= 0.9
+            if max_similarity >= 0.9:
+                flagged_codes[input_code] = True
+            else:
+                if input_code not in flagged_codes:
+                    flagged_codes[input_code] = False
+
+    # Filter out plagiarized sentences
+    plagiarized_codes = [sentence for sentence, flag in flagged_codes.items() if flag]
+
+    # Calculate plagiarism percentage
+    total_sentences = len(embeddings_code_self)
+    plagiarized_count = len(plagiarized_codes)
+    plagiarism_percentage = (plagiarized_count / total_sentences) * 100 if total_sentences > 0 else 0
+
+    return flagged_codes, plagiarized_codes, plagiarism_percentage
+
+
+
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.colors import red, black
+from reportlab.pdfgen import canvas
+
+# Create a PDF document
+def highlight_plagiarized_code(flagged_codes, file_name):
+    
+    c = canvas.Canvas(file_name, pagesize=letter)
+    width, height = letter  # 8.5 x 11 inches
+
+    # Set starting position for text
+    y_position = height - 40
+    x_position = 40
+    line_height = 14  # Space between lines of code
+
+    for line, flagged in flagged_codes.items():
+        # Check if the line is flagged as True
+        if flagged:
+            c.setFillColor(red)  # Set color to red for flagged lines
+        else:
+            c.setFillColor(black)  # Default color for non-flagged lines
+
+        c.setFont("Helvetica", 10)
+        c.drawString(x_position, y_position, line)
+
+        # Move to the next line
+        y_position -= line_height
+        if y_position <= 40:  # Check if we reached the bottom of the page
+            c.showPage()  # Create a new page
+            y_position = height - 40
+
+    # return the PDF
+    c.save()
+
+    return True
+
+
+#------------------------------------ Code Plagiarsim ----------------------------------------#
 
