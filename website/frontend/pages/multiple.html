@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Multiple File Plagiarism Checks</title>
+  <link rel="stylesheet" href="/website/frontend/stylesheets/multiple.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Back to Dashboard -->
+    <div style="text-align: right; padding: 10px 20px;">
+      <a href="/welcome"> 
+        <button style="background-color: #5874C6; color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer;">Back to Dashboard</button>
+      </a>
+    </div>
+
+    <div class="header-section">
+      <h1>Multiple File Plagiarism Checks</h1>
+      <p>Upload files you want to compare for plagiarism.</p>
+      <p>PDF, Images & Videos are allowed.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="report-name">Report Name</label>
+      <input 
+        type="text" 
+        id="report-name" 
+        name="report_name" 
+        placeholder="Enter your report name...">
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" action="">
+      {% csrf_token %}
+      <div class="drop-section">
+        <div class="col">
+          <div class="cloud-icon">
+            <img src="icons/cloud.png" alt="cloud">
+          </div>
+          <span>Drag & Drop your files here</span>
+          <span>OR</span>
+          <button type='button' class="file-selector">Browse Files</button>
+          <input type="file" class="file-selector-input" name="file" multiple accept=".py, .pdf">
+        </div>
+        <div class="col">
+          <div class="drop-here">Drop Here</div>
+        </div>
+      </div>
+
+      <div class="list-section">
+        <div class="list-title">Uploaded Files</div>
+        <div class="list"></div>
+
+        <!-- Generate Report Button -->
+        <div style="text-align: center; margin-top: 20px;">
+          <button type="submit" style="background-color: #50a156; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">Generate Report</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="/website/frontend/scripts/multiple.js"></script>
+
+</body>
+</html>

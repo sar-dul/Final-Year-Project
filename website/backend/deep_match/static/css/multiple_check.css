@@ -1,198 +1,219 @@
+/* General Styles */
+body {
+    background: linear-gradient(135deg, #74b9ff, #a29bfe);
+    padding: 40px;
+    margin: 0;
+    font-family: 'Poppins', 'Ubuntu', sans-serif;
+}
 
-body{
-    background-color: #7494EC;
+/* Container */
+.container {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 600px;
+    margin: auto;
     padding: 30px;
-    margin: 0px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
-*{
-    font-family: 'Ubuntu', sans-serif;
-}
-.container{
+
+/* Header Section */
+.header-section {
+    margin-bottom: 25px;
     text-align: center;
-    width: 100%;
-    max-width: 500px;
-    min-height: 435px;
-    margin: auto;
-    background-color: white;
-    border-radius: 16px;
-    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
-
-.header-section{
-    padding: 25px 0px;
-}
-.header-section h1{
-    font-weight: 500;
-    font-size: 1.7rem;
-    text-transform: uppercase;
-    color: #707EA0;
-    margin: 0px;
-    margin-bottom: 8px;
-}
-.header-section p{
-    margin: 5px;
-    font-size: 0.95rem;
-    color: #707EA0;
-}
-
-.drop-section{
-    min-height: 250px;
-    border: 1px dashed #A8B3E3;
-    background-image: linear-gradient(180deg, white, #F1F6FF);
-    margin: 5px 35px 35px 35px;
-    border-radius: 12px;
-    position: relative;
-}
-.drop-section div.col:first-child{
-    opacity: 1;
-    visibility: visible;
-    transition-duration: 0.2s;
-    transform: scale(1);
-    width: 200px;
-    margin: auto;
-}
-.drop-section div.col:last-child{
-    font-size: 40px;
-    font-weight: 700;
-    color: #c0cae1;
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    margin: auto;
-    width: 200px;
-    height: 55px;
-    pointer-events: none;
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.6);
-    transition-duration: 0.2s;
-}
-/* we will use "drag-over-effect" class in js */
-.drag-over-effect div.col:first-child{
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: scale(1.1);
-}
-.drag-over-effect div.col:last-child{
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
-}
-.drop-section .cloud-icon{
-    margin-top: 25px;
-    margin-bottom: 20px;
-}
-.drop-section span,
-.drop-section button{
-    display: block;
-    margin: auto;
-    color: #707EA0;
+.header-section h1 {
+    font-weight: 600;
+    font-size: 2rem;
+    color: #2d3436;
     margin-bottom: 10px;
 }
-.drop-section button{
-    color: white;
-    background-color: #5874C6;
-    border: none;
-    outline: none;
-    padding: 7px 20px;
-    border-radius: 8px;
-    margin-top: 20px;
-    cursor: pointer;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+.header-section p {
+    font-size: 1rem;
+    color: #636e72;
 }
-.drop-section input{
+
+/* Form Group */
+.form-group {
+    margin: 20px 0;
+    text-align: left;
+}
+.form-group label {
+    font-weight: 500;
+    font-size: 1rem;
+    color: #2d3436;
+    display: block;
+    margin-bottom: 8px;
+}
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #dfe6e9;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+.form-group input[type="text"]:focus {
+    border-color: #6c5ce7;
+    outline: none;
+}
+
+/* Drop Section */
+.drop-section {
+    margin: 30px 0;
+    border: 2px dashed #a29bfe;
+    border-radius: 16px;
+    background: #f5f6fa;
+    padding: 30px 20px;
+    position: relative;
+    text-align: center;
+    transition: background 0.3s;
+}
+.drop-section:hover {
+    background: #ecf0f1;
+}
+.drop-section .cloud-icon img {
+    width: 80px;
+    margin-bottom: 15px;
+}
+.drop-section span {
+    display: block;
+    font-size: 1rem;
+    color: #636e72;
+    margin-bottom: 8px;
+}
+.drop-section button {
+    background: #6c5ce7;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 12px;
+    margin-top: 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.drop-section button:hover {
+    background: #5a4bcf;
+}
+.drop-section input[type="file"] {
     display: none;
 }
 
-.list-section{
+/* Drag Over Effect */
+.drag-over-effect .col:first-child {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.1);
+}
+.drag-over-effect .col:last-child {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+.drop-section div.col:last-child {
+    font-size: 40px;
+    font-weight: bold;
+    color: #b2bec3;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+/* Uploaded List */
+.list-section {
+    margin-top: 20px;
     display: none;
-    text-align: left;
-    margin: 0px 35px;
-    padding-bottom: 20px;
 }
-.list-section .list-title{
-    font-size: 0.95rem;
-    color: #707EA0;
+.list-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #2d3436;
+    margin-bottom: 10px;
 }
-.list-section li{
+.list-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.list-section li {
+    background: #f1f2f6;
+    border-radius: 12px;
+    padding: 12px 15px;
     display: flex;
-    margin: 15px 0px;
-    padding-top: 4px;
-    padding-bottom: 2px;
-    border-radius: 8px;
-    transition-duration: 0.2s;
+    align-items: center;
+    margin-bottom: 12px;
+    transition: background 0.3s;
 }
-.list-section li:hover{
-    box-shadow: #E3EAF9 0px 0px 4px 0px, #E3EAF9 0px 12px 16px 0px;
+.list-section li:hover {
+    background: #dfe6e9;
 }
-.list-section li .col{
-    flex: .1;
+.list-section li .col {
+    flex: 1;
 }
-.list-section li .col:nth-child(1){
-    flex: .15;
+.list-section li .col:nth-child(1) {
+    flex: 0.1;
     text-align: center;
 }
-.list-section li .col:nth-child(2){
-    flex: .75;
-    text-align: left;
-    font-size: 0.9rem;
-    color: #3e4046;
-    padding: 8px 10px;
+.list-section li .col:nth-child(2) {
+    flex: 0.8;
+    font-size: 0.95rem;
+    color: #2d3436;
 }
-.list-section li .col:nth-child(2) div.name{
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    max-width: 250px;
-    display: inline-block;
-}
-.list-section li .col .file-name span{
-    color: #707EA0;
+.list-section li .col .file-name span {
+    color: #b2bec3;
     float: right;
 }
-.list-section li .file-progress{
+.list-section li .file-progress {
     width: 100%;
     height: 5px;
+    background: #dfe6e9;
+    border-radius: 8px;
+    overflow: hidden;
     margin-top: 8px;
-    border-radius: 8px;
-    background-color: #dee6fd;
 }
-.list-section li .file-progress span{
+.list-section li .file-progress span {
     display: block;
-    width: 0%;
     height: 100%;
-    border-radius: 8px;
-    background-image: linear-gradient(120deg, #6b99fd, #9385ff);
-    transition-duration: 0.4s;
+    width: 0;
+    background: linear-gradient(90deg, #6c5ce7, #74b9ff);
+    transition: width 0.4s;
 }
-.list-section li .col .file-size{
-    font-size: 0.75rem;
-    margin-top: 3px;
-    color: #707EA0;
+.list-section li .file-size {
+    font-size: 0.8rem;
+    color: #636e72;
 }
-.list-section li .col svg.cross,
-.list-section li .col svg.tick{
-    fill: #8694d2;
-    background-color: #dee6fd;
-    position: relative;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
+
+/* Submit Button */
+button[type="submit"] {
+    background: #00b894;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background 0.3s;
 }
-.list-section li .col svg.tick{
-    fill: #50a156;
-    background-color: transparent;
+button[type="submit"]:hover {
+    background: #019875;
 }
-.list-section li.complete span,
-.list-section li.complete .file-progress,
-.list-section li.complete svg.cross{
-    display: none;
+
+/* Back to Dashboard Button */
+.back-dashboard-btn {
+    background: #6c5ce7;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
 }
-.list-section li.in-prog .file-size,
-.list-section li.in-prog svg.tick{
-    display: none;
+.back-dashboard-btn:hover {
+    background: #5a4bcf;
 }

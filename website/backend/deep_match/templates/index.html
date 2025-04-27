@@ -12,9 +12,10 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
     </head>
 
-    <body>
+    <!-- Include the header -->
+    {% include 'header.html' %}
 
-        <!-- <div id="header"></div> -->
+    <body>
         
         <!-- Split Screen
         =============================== -->
@@ -133,7 +134,8 @@
             </div>
         </section>
 
-        <!-- <iframe id="footer-frame" src="/website/frontend/pages/footer.html"></iframe> -->
+        <!-- Include the footer -->
+        {% include 'footer.html' %}
 
 
         <style>

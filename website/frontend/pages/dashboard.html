@@ -265,6 +265,7 @@
                         <div class="list-title">Uploaded Files</div>
                         <div class="list"></div>
                     </div>
+                    <button type="submit" class="check-button">Check Plagiarism</button>
                 </div>
             </main> 
             <!-- MAIN UPLOAD END-->
@@ -303,48 +304,39 @@
                                     <th>File Name</th>
                                     <th>Date</th>
                                     <th>Plagiarism</th>
+                                    <th>Reports</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <img src="img/people.png">
-                                        <p>John Doe</p>
-                                    </td>
+                                    <td>File Name</td>
                                     <td>01-10-2021</td>
-                                    <td><span class="status completed">Completed</span></td>
+                                    <td>20%</span></td>
+                                    <td>
+                                        <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-outline-primary">
+                                            View Report →
+                                        </a>
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <img src="img/people.png">
-                                        <p>John Doe</p>
-                                    </td>
+                                    <td>File Name</td>
                                     <td>01-10-2021</td>
-                                    <td><span class="status pending">Pending</span></td>
+                                    <td>20%</span></td>
+                                    <td>
+                                        <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-outline-primary">
+                                            View Report →
+                                        </a>
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <img src="img/people.png">
-                                        <p>John Doe</p>
-                                    </td>
+                                    <td>File Name</td>
                                     <td>01-10-2021</td>
-                                    <td><span class="status process">Process</span></td>
-                                </tr>
-                                <tr>
+                                    <td>20%</span></td>
                                     <td>
-                                        <img src="img/people.png">
-                                        <p>John Doe</p>
+                                        <a href="{% url 'view_report' report.id %}" class="btn btn-sm btn-outline-primary">
+                                            View Report →
+                                        </a>
                                     </td>
-                                    <td>01-10-2021</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="img/people.png">
-                                        <p>John Doe</p>
-                                    </td>
-                                    <td>01-10-2021</td>
-                                    <td><span class="status completed">Completed</span></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -21,6 +21,15 @@
       <p>PDF, Images & Videos are allowed.</p>
     </div>
 
+    <div class="form-group">
+      <label for="report-name">Report Name</label>
+      <input 
+        type="text" 
+        id="report-name" 
+        name="report_name" 
+        placeholder="Enter your report name...">
+    </div>
+
     <form method="POST" enctype="multipart/form-data" action="{% url 'check_multiple_files' %}">
       {% csrf_token %}
       <div class="drop-section">

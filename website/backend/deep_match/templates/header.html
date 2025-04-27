@@ -1,0 +1,57 @@
+ <!-- Load static files -->
+ {% load static %}
+
+<head>
+	<link rel="stylesheet" href="{% static 'css/header.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+
+<header>
+    <div class="nav">
+      <div class="container">
+        <div class="main-nav">
+          <div class="logo">
+            <h3>Uvais Codes</h3>
+          </div>
+          <div class="nav-menu">
+            <ul>
+              <li>Home</li>
+              <li>About us</li>
+              <li>Services</li>
+              <li>Projects</li>
+            </ul>
+          </div>
+          <div class="nav-btn">
+            <a href="pages/login.html">
+              <button>
+                Get Started<i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </a>
+          </div>
+          <div class="icon">
+            <i id="bar" class="fa-solid fa-bars"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+ </header>
+
+
+ <script>
+
+    const icon = document.querySelector(".icon");
+    const ul = document.querySelector(".nav-menu ul");
+    const bar = document.getElementById("bar");
+    
+    icon.addEventListener("click", () =>{
+        console.log(ul);
+        ul.classList.toggle("showMenu");
+        
+        if (ul.classList.contains("showMenu")) {
+            bar.className = "fa-solid fa-xmark";
+        } else {
+            bar.className = "fa-solid fa-bars";
+        }
+    } )
+
+ </script>
