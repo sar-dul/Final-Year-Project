@@ -74,21 +74,21 @@
 
     <ul class="box-info">
         <li>
-            <i class='bx bxs-calendar-check' ></i>
+            <i class='bx bxs-up-arrow-circle' ></i>
             <span class="text">
                 <h3>Upload File</h3>
                 <p>[Go to Upload]</p>
             </span>
         </li>
         <li>
-            <i class='bx bxs-group' ></i>
+            <i class='bx bxs-bar-chart-alt-2' ></i>
             <span class="text">
                 <h3>Total Checks</h3>
                 <p>{{ total_reports }} Files</p>
             </span>
         </li>
         <li>
-            <i class='bx bxs-dollar-circle' ></i>
+            <i class='bx bxs-info-circle' ></i>
             <span class="text">
                 <h3>How It Works</h3>
                 <p>[Help Page]</p>
@@ -142,52 +142,48 @@
 
 
 {% block mainUpload%}
-    <div  class="head-title">
-        <div class="left">
-            <h1>Upload Your Files</h1>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="#">Dashboard</a>
-                </li>
-                <li><i class='bx bx-chevron-right' ></i></li>
-                <li>
-                    <a class="active" href="#">Upload</a>
-                </li>
-            </ul>
-        </div>
+<div class="head-title">
+    <div class="left">
+        <h1>Upload Your File</h1>
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Dashboard</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+                <a class="active" href="#">Upload</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header-section">
+        <h1>Upload Your File</h1>
+        <p>Upload the file you want to check for plagiarism.</p>
+        <p>Only .py and .pdf files are allowed.</p>
     </div>
 
-    <div class="container">
-        <div class="header-section">
-            <h1>Upload Files</h1>
-            <p>Upload files you want to share with your team members.</p>
-            <p>PDF, Images & Videos are allowed.</p>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'check_file' %}">
+        {% csrf_token %}
+        <div class="drop-section">
+            <div class="col">
+                <div class="cloud-icon">
+                    <img src="{% static 'images/cloud.png' %}" alt="cloud">
+                </div>
+                <span>Drag & Drop your file here</span>
+                <span>OR</span>
+                <button type="button" class="file-selector">Browse Files</button>
+                <input type="file" class="file-selector-input" name="file" accept=".py, .pdf">
+            </div>
         </div>
-
-        <form method="POST" enctype="multipart/form-data" action="{% url 'check_file' %}">
-            {% csrf_token %}
-            <div class="drop-section">
-                <div class="col">
-                    <div class="cloud-icon">
-                        <img src="icons/cloud.png" alt="cloud">
-                    </div>
-                    <span>Drag & Drop your files here</span>
-                    <span>OR</span>
-                    <button type="button" class="file-selector">Browse Files</button>
-                    <input type="file" class="file-selector-input" name="file" accept=".py, .pdf">
-                </div>
-                <div class="col">
-                    <div class="drop-here">Drop Here</div>
-                </div>
-            </div>
-            <div class="list-section">
-                <div class="list-title">Uploaded Files</div>
-                <div class="list"></div>
-            </div>
-            <button type="submit" class="check-button">Check Plagiarism</button>
-        </form>
-        
-    </div>
+        <div class="list-section">
+            <div class="list-title">Uploaded File</div>
+            <div class="list"></div>
+        </div>
+        <button type="submit" class="check-button">Check Plagiarism</button>
+    </form>
+</div>
 
 {% endblock %}
 
@@ -195,7 +191,7 @@
 {% block mainHistory %}
     <div  class="head-title">
         <div class="left">
-            <h1>Welcome Your Name</h1>
+            <h1>Your History</h1>
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
@@ -211,7 +207,7 @@
     <div class="table-data">
         <div class="order">
             <div class="head">
-                <h3>Recent Checks for student</h3>
+                <h3>Recent Checks</h3>
                 <i class='bx bx-search' ></i>
                 <i class='bx bx-filter' ></i>
             </div>
@@ -227,7 +223,7 @@
                 <tbody>
                     {% for report in reports %}
                     <tr>
-                        <td>{{ report.file_name }}</td>
+                        <td>{{ report.original_file_name }}</td>
                         <td>{{ report.uploaded_at|date:"d-m-Y" }}</td>
                         <td>{{ report.plagiarism_percent }} %</td>
                         <td>

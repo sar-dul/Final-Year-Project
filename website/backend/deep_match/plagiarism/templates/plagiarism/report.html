@@ -15,7 +15,7 @@
         <tbody>
             {% for report in reports %}
                 <tr>
-                    <td>{{ report.file_name }}</td>
+                    <td>{{ report.original_file_name }}</td>
                     <td>{{ report.uploaded_at }}</td>
                     <td class="plagiarism-percent 
                         {% if report.plagiarism < 10 %}plagiarism-low

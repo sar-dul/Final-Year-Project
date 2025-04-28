@@ -64,7 +64,7 @@
 {% block mainDashboard %}
     <div  class="head-title">
         <div class="left">
-            <h1> Welcome to Home Page User {{ request.user.username }}. Your role is {{ request.user.role }}!</h1>
+            <h1> Welcome to the checker {{ request.user.username }} ({{ request.user.role }})!</h1>
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
@@ -79,21 +79,21 @@
 
     <ul class="box-info">
         <li>
-            <i class='bx bxs-calendar-check' ></i>
+            <i class='bx bxs-up-arrow-circle' ></i>
             <span class="text">
-                <h3>Check Plagiarisme</h3>
+                <h3>Check Plagiarism</h3>
                 <p>[Go to Checker]</p>
             </span>
         </li>
         <li>
-            <i class='bx bxs-group' ></i>
+            <i class='bx bar-chart-alt-2' ></i>
             <span class="text">
                 <h3>Total Reports</h3>
                 <p>{{ total_teacher_reports }} Report</p>
             </span>
         </li>
         <li>
-            <i class='bx bxs-dollar-circle' ></i>
+            <i class='bx bxs-info-circle' ></i>
             <span class="text">
                 <h3>How It Works</h3>
                 <p>[Help Page]</p>
@@ -120,7 +120,7 @@
                 <tbody>
                     {% for report in report_summary %}
                     <tr>
-                        <td>{{ report.session_name }}</td>
+                        <td>{{ report.report_name }}</td>
                         <td>{{ report.date }}</td>
                         <td>{{ report.report_count }}</td>
                     </tr>
@@ -172,7 +172,7 @@
             <div class="drop-section">
                 <div class="col">
                     <div class="cloud-icon">
-                        <img src="icons/cloud.png" alt="cloud">
+                        <img src="{% static 'images/cloud.png' %}" alt="cloud">
                     </div>
                     <span>Drag & Drop your files here</span>
                     <span>OR</span>
@@ -180,7 +180,6 @@
                     <input type="file" class="file-selector-input" name="file" multiple accept=".py, .pdf">
                 </div>
                 <div class="col">
-                    <div class="drop-here">Drop Here</div>
                 </div>
             </div>
             <div class="list-section">
@@ -198,7 +197,7 @@
 {% block mainHistory%}
     <div  class="head-title">
         <div class="left">
-            <h1>Welcome Your Name</h1>
+            <h1>Your History</h1>
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
@@ -214,7 +213,7 @@
     <div class="table-data">
         <div class="order">
             <div class="head">
-                <h3>Recent Checks for teacher</h3>
+                <h3>Recent Checks</h3>
                 <i class='bx bx-search' ></i>
                 <i class='bx bx-filter' ></i>
             </div>
@@ -230,7 +229,7 @@
                 <tbody>
                     {% for report in report_summary %}
                     <tr>
-                        <td>{{ report.session_name }}</td>
+                        <td>{{ report.report_name }}</td>
                         <td>{{ report.date }}</td>
                         <td>{{ report.report_count }}</td>
                         <td>

@@ -123,12 +123,15 @@ def welcome(request):
         pdf_count += sum(1 for report in reports if report.file_name.lower().endswith('.pdf'))
         py_count += sum(1 for report in reports if report.file_name.lower().endswith('.py'))
 
+        report_name = reports[0].report_name if reports else None
+
         report_summary.append({
             'session_name': str(session),  # Customize if session has name
             'session_id': session.id,
             'report_count': len(reports),
             'date': reports[0].uploaded_at.strftime('%Y-%m-%d'),
             'reports': reports,
+            'report_name': report_name,
         })
 
     # prepare data

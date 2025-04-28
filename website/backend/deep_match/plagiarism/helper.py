@@ -177,7 +177,7 @@ def detect_plagiarism(embeddings_self, other_embeddings_list, similarity_thresho
     # Calculate plagiarism percentage
     total_sentences = len(embeddings_self)
     plagiarized_count = len(plagiarized_sentences)
-    plagiarism_percentage = (plagiarized_count / total_sentences) * 100 if total_sentences > 0 else 0
+    plagiarism_percentage = round((plagiarized_count / total_sentences) * 100 if total_sentences > 0 else 0, 2)
 
 
     return plagiarized_sentences, plagiarism_percentage
@@ -287,7 +287,7 @@ def detect_code_plagiarism(embeddings_code_self, other_embeddings_list, similari
     # Calculate plagiarism percentage
     total_sentences = len(embeddings_code_self)
     plagiarized_count = len(plagiarized_codes)
-    plagiarism_percentage = (plagiarized_count / total_sentences) * 100 if total_sentences > 0 else 0
+    plagiarism_percentage = round((plagiarized_count / total_sentences) * 100, 2) if total_sentences > 0 else 0
 
     return flagged_codes, plagiarized_codes, plagiarism_percentage
 

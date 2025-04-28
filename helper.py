@@ -204,7 +204,6 @@ def highlight_plagiarized_text(file_bytes, plagiarized_sentences):
         word_list = [(word[4].strip(), fitz.Rect(word[:4])) for word in words]
         
         for sentence in plagiarized_sentences:
-            sentence = sentence.strip()
             if not sentence:
                 continue
             sentence_words = sentence.split()

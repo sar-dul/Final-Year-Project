@@ -137,6 +137,7 @@ def check_single_file(request):
                     session=session,
                     user=request.user,
                     file_name=unique_filename,
+                    original_file_name=uploaded_file.name,
                     uploaded_at=timezone.now(),
                     plagiarism_percent=plagiarism_percent,
                     highlighted_file_path=highlighted_pdf_path,
@@ -215,6 +216,7 @@ def check_single_file(request):
                     session=session,
                     user=request.user,
                     file_name=unique_filename,
+                    original_file_name=uploaded_file.name,
                     uploaded_at=timezone.now(),
                     plagiarism_percent=plagiarism_percent,
                     highlighted_file_path=highlighted_code_path,
@@ -235,6 +237,8 @@ def check_single_file(request):
 def check_multiple_files(request):
 
     if request.method == 'POST' and request.FILES.getlist('file'):  # Check for multiple files
+
+        report_name = request.POST.get('report_name')
 
         files = request.FILES.getlist('file')  # Get all uploaded files
         file_urls = []  # List to store the URLs of uploaded files
@@ -319,6 +323,8 @@ def check_multiple_files(request):
                         session=session,
                         user=request.user,
                         file_name=unique_filename,
+                        original_file_name=uploaded_file.name,
+                        report_name=report_name,
                         uploaded_at=timezone.now(),
                         plagiarism_percent=plagiarism_percent,
                         highlighted_file_path=highlighted_pdf_path,
@@ -382,14 +388,13 @@ def check_multiple_files(request):
                     with open(highlighted_code_path, "rb") as f:
                         base64_code = base64.b64encode(f.read()).decode('utf-8')
 
-                    # Create session
-                    session = PlagiarismSession.objects.create(user=request.user)
-
                     # Inside the view, after `highlighted_pdf_path` is defined
                     PlagiarismReport.objects.create(
                         session=session,
                         user=request.user,
                         file_name=unique_filename,
+                        original_file_name=uploaded_file.name,
+                        report_name=report_name,
                         uploaded_at=timezone.now(),
                         plagiarism_percent=plagiarism_percent,
                         highlighted_file_path=highlighted_code_path,

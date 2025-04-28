@@ -575,13 +575,13 @@ main.active {
 
 .cloud-icon img {
     width: 80px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .drop-section span {
     display: block;
     color: #7f8c8d;
-    margin: 8px 0;
+    margin: 4px 0;
     font-size: 1rem;
 }
 
