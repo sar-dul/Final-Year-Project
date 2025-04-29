@@ -4,6 +4,8 @@ import numpy as np
 from django.urls import reverse
 from plagiarism.models import PlagiarismReport
 from django.contrib.auth import get_user_model
+from users.models import User
+from plagiarism.models import PlagiarismSession
 
 class HelperFunctionTests(TestCase):
     def test_get_sentences(self):
@@ -106,3 +108,43 @@ class ResultViewTestCase(TestCase):
         checked_date_str = self.report.uploaded_at.strftime('%B %d, %Y')  # Format as April 29, 2025
         self.assertIn(checked_date_str, response.content.decode())
         self.assertIn(str(self.report.plagiarism_percent), response.content.decode())
+
+
+class PlagiarismSessionModelTest(TestCase):
+    def test_create_session(self):
+        user = User.objects.create_user(
+            username='testuser',
+            name='Test User',
+            email='test@example.com',
+            password='testpass123'
+        )
+        session = PlagiarismSession.objects.create(user=user)
+        
+        self.assertEqual(session.user, user)
+        self.assertIsNotNone(session.submitted_at)
+        self.assertIn("Session by", str(session))
+
+class PlagiarismReportModelTest(TestCase):
+    def test_create_report_with_session(self):
+        user = User.objects.create_user(
+            username='reportuser',
+            name='Report User',
+            email='report@example.com',
+            password='pass1234'
+        )
+        session = PlagiarismSession.objects.create(user=user)
+
+        report = PlagiarismReport.objects.create(
+            session=session,
+            user=user,
+            file_name='report123.pdf',
+            original_file_name='original_report.pdf',
+            plagiarism_percent=42.7,
+            highlighted_file_path='media/highlighted/report123.pdf',
+            base64_pdf='dGVzdA=='  # base64 for "test"
+        )
+
+        self.assertEqual(report.session, session)
+        self.assertEqual(report.user.username, 'reportuser')
+        self.assertEqual(report.plagiarism_percent, 42.7)
+        self.assertIn('report123.pdf', str(report))
