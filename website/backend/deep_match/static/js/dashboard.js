@@ -154,3 +154,7 @@ switchMode.addEventListener('change', function () {
         document.body.classList.remove('dark');
     }
 })
+
+function confirmLogout() {
+    return confirm("Are you sure you want to log out?");
+}

@@ -48,7 +48,7 @@ def login_view(request):
             login(request, user)
             return redirect('welcome')  # Change to your desired redirect URL
         else:
-            messages.error(request, "Invalid email or password.")
+            messages.error(request, "Invalid username or password.")
 
     return render(request, 'users/login.html')
 
@@ -75,29 +75,13 @@ def welcome(request):
     categories = ['High', 'Medium', 'Low']
     counts = [bar_graph_data['high'], bar_graph_data['mid'], bar_graph_data['low']]
 
-    # Create a horizontal bar chart using Plotly Express
-    fig = px.bar(x=counts, y=categories, orientation='h',
+    # Create a simple vertical bar chart
+    fig = px.bar(x=categories, y=counts,
                 title="Plagiarism Report Counts",
-                labels={'x': 'Number of Reports', 'y': 'Plagiarism Level'},
-                text=counts,  # Display count values inside the bars
-                color=categories,  # Color bars based on categories (discrete color)
-                color_discrete_sequence=['#A8DADC', '#FFE156', '#6A0572'])  # Custom discrete colors
+                labels={'x': 'Plagiarism Level', 'y': 'Number of Reports'},
+                color=categories,  # Color bars based on categories
+                color_discrete_sequence=['#A8DADC', '#FFE156', '#6A0572'])  # Custom colors
 
-    # Add hover information and customize the bars
-    fig.update_traces(texttemplate='%{text}', textposition='inside', marker=dict(line=dict(color='black', width=1)))
-
-    # Customize layout for a cleaner appearance
-    fig.update_layout(
-        title_font_size=24,
-        title_x=0.5,  # Center the title
-        xaxis_title="Number of Reports",
-        yaxis_title="Plagiarism Level",
-        template="none",  # Remove default Plotly background template for a cleaner look
-        plot_bgcolor='rgba(0, 0, 0, 0)',  # Transparent plot background
-        paper_bgcolor='rgba(0, 0, 0, 0)',  # Transparent paper background
-        showlegend=False,  # Hide legend as it is unnecessary for this chart
-        margin=dict(l=100, r=50, t=50, b=50),  # Adjust margins for better spacing
-    )
 
     # Render the chart as HTML
     graph_html = fig.to_html(full_html=False)
@@ -142,8 +126,8 @@ def welcome(request):
 
     df = pd.DataFrame(data)
 
-    # create bar plot
-    fig_teacher = px.bar(df, x='File Type', y='Count', title='File Counts')
+    # create bar plot with colored bars
+    fig_teacher = px.bar(df, x='File Type', y='Count', color='File Type', title='File Counts')
     graph_html_teacher = fig_teacher.to_html(full_html=False)
 
     # Sort by date (latest first)

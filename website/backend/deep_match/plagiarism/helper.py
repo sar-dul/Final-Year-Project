@@ -87,9 +87,9 @@ ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=ce
 
 # Then import nltk and download resources
 import nltk
-nltk.download('punkt')
-nltk.download('punkt_tab')  # Add this line
-nltk.download('wordnet')    # Sometimes needed for text processing
+# nltk.download('punkt')
+# nltk.download('punkt_tab')  # Add this line
+# nltk.download('wordnet')    # Sometimes needed for text processing
 
 # Rest of your imports
 from sentence_transformers import SentenceTransformer

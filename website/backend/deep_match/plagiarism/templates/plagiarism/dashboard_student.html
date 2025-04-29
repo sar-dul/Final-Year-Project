@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'js/dashboard.js' %}"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script> 
 {% endblock %}
 
 {% block sideBar %} 
@@ -46,7 +46,7 @@
             </a>
         </li>
         <li>
-            <a href="/logout" class="logout">
+            <a href="/logout" class="logout" onclick="return confirmLogout();">
                 <i class='bx bxs-log-out-circle'></i>
                 <span class="text">Logout</span>
             </a>
@@ -59,7 +59,7 @@
 {% block mainDashboard %}
     <div  class="head-title">
         <div class="left">
-            <h1> Welcome to Home Page User {{ request.user.username }}. Your role is {{ request.user.role }}!</h1>
+            <h1> Welcome {{ request.user.username }} ({{ request.user.role }})!</h1>
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
@@ -115,7 +115,7 @@
                 <tbody>
                     {% for report in reports %}
                     <tr>
-                        <td>{{ report.file_name }}</td>
+                        <td>{{ report.original_file_name }}</td>
                         <td>{{ report.uploaded_at|date:"d-m-Y" }}</td>
                         <td>{{ report.plagiarism_percent }} %</td>
                     </tr>
