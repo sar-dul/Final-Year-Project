@@ -7,6 +7,9 @@ from django.conf import settings
 from .models import PlagiarismReport, PlagiarismSession
 from django.utils import timezone
 import time
+import zipfile
+from django.core.files.storage import FileSystemStorage
+from django.core.files.base import ContentFile
 
 def go_to_multiple_check(request):
     return render(request, 'plagiarism/multiple_check.html')
@@ -17,27 +20,59 @@ def go_to_dashboard(request):
 def go_to_report(request):
     return render(request, 'plagiarism/report_template.html')
 
+
 def upload_files(request):
     if request.method == 'POST' and request.FILES.getlist('file'):
         files = request.FILES.getlist('file')
         file_urls = []
-
         fs = FileSystemStorage()
 
         for uploaded_file in files:
-            ext = os.path.splitext(uploaded_file.name)[1].lower()  # Get the file extension
+            file_ext = os.path.splitext(uploaded_file.name)[1].lower()
 
-            # Determine directory based on file type
-            if ext == '.py':
-                save_path = 'existing_files/code/' + uploaded_file.name
-            elif ext == '.pdf':
-                save_path = 'existing_files/pdf/' + uploaded_file.name
+            if file_ext == '.zip':
+                # Process ZIP file and extract contents
+                with zipfile.ZipFile(uploaded_file, 'r') as zip_ref:
+                    for entry in zip_ref.namelist():
+                        # Skip directories and hidden files
+                        if entry.endswith('/') or entry.startswith('__MACOSX/'):
+                            continue
+                        # Get base name and extension
+                        base_name = os.path.basename(entry)
+                        entry_ext = os.path.splitext(base_name)[1].lower()
+
+                        print()
+                        print(f"Processing entry: {entry} with extension: {entry_ext}")
+                        print()
+
+                        # Determine save directory
+                        if entry_ext == '.py':
+                            save_dir = 'existing_files/code/'
+                        elif entry_ext == '.pdf':
+                            save_dir = 'existing_files/pdf/'
+                        elif entry.endswith('.DS_Store'):
+                            continue
+                        else:
+                            save_dir = 'existing_files/others/'
+                        
+                        # Create full save path and ensure filename security
+                        save_path = os.path.join(save_dir, base_name)
+                        # Extract file data and save
+                        file_data = zip_ref.read(entry)
+                        content_file = ContentFile(file_data, name=base_name)
+                        saved_name = fs.save(save_path, content_file)
+                        file_urls.append(fs.url(saved_name))
             else:
-                save_path = 'existing_files/others/' + uploaded_file.name  # Optional: handle other types
-
-            filename = fs.save(save_path, uploaded_file)
-            file_url = fs.url(filename)
-            file_urls.append(file_url)
+                # Handle regular files
+                if file_ext == '.py':
+                    save_path = f'existing_files/code/{uploaded_file.name}'
+                elif file_ext == '.pdf':
+                    save_path = f'existing_files/pdf/{uploaded_file.name}'
+                else:
+                    save_path = f'existing_files/others/{uploaded_file.name}'
+                
+                saved_name = fs.save(save_path, uploaded_file)
+                file_urls.append(fs.url(saved_name))
 
         return redirect('/welcome')
 
@@ -434,3 +469,7 @@ def result_view(request, report_id):
     }
 
     return render(request, 'plagiarism/result.html', context)
+
+def files_from_zip():
+    # This function is not implemented in the provided code.
+    pass
