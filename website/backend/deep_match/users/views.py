@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from plagiarism.models import PlagiarismReport
 import plotly.express as px
 import pandas as pd
+import re
 
 def index(request):
     return render(request, 'index.html')
@@ -18,10 +19,37 @@ def register(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
+        confirm_password = request.POST.get('retypepassword')
         role = request.POST.get('role')
 
+        errors = []
+
+        # Full name validation
+        if not re.fullmatch(r'[A-Za-z ]{2,50}', name):
+            errors.append("Full name must contain only letters and be 2 to 50 characters long.")
+
+        # Username already exists
+        if User.objects.filter(username=username).exists():
+            errors.append("Username already taken.")
+
+        # Username length
+        if len(username) < 3 or len(username) > 20:
+            errors.append("Username must be between 3 and 20 characters.")
+
+        # Email already exists
         if User.objects.filter(email=email).exists():
-            messages.error(request, "Email already registered.")
+            errors.append("Email already registered.")
+
+        # Password confirmation
+        if password != confirm_password:
+            errors.append("Passwords do not match.")
+
+        # You can add more validations here...
+
+        # If there are errors, show them all
+        if errors:
+            for error in errors:
+                messages.error(request, error)
             return redirect('register')
 
         user = User.objects.create_user(
@@ -33,7 +61,7 @@ def register(request):
         )
 
         messages.success(request, "Registration successful! Please log in.")
-        return redirect('login')
+        return redirect('register')
 
     return render(request, 'users/register.html')
 

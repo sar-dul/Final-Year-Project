@@ -11,6 +11,12 @@
 
 {% block scripts %}
     <script src="{% static 'js/dashboard.js' %}"></script>
+    {% if messages %}
+        <script>
+            // Only show the first message
+            alert("File(s) Uploaded Successfully!");
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block sideBar %} 
@@ -86,7 +92,7 @@
             </span>
         </li>
         <li>
-            <i class='bx bar-chart-alt-2' ></i>
+            <i class='bx bxs-bar-chart-alt-2' ></i>
             <span class="text">
                 <h3>Total Reports</h3>
                 <p>{{ total_teacher_reports }} Report</p>
@@ -177,7 +183,7 @@
                     <span>Drag & Drop your files here</span>
                     <span>OR</span>
                     <button type="button" class="file-selector">Browse Files</button>
-                    <input type="file" class="file-selector-input" name="file" multiple accept=".py, .pdf, .zip">
+                    <input type="file" class="file-selector-input" name="file" multiple accept=".py, .pdf, .zip" required>
                 </div>
                 <div class="col">
                 </div>

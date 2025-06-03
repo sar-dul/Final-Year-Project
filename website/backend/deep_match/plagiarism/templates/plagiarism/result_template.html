@@ -29,4 +29,23 @@
         {% block content %} {% endblock %}
     </div>
 </body>
+
+<script>
+    function downloadPDF() {
+        const base64 = "{{ base64_pdf|safe }}";  // Base64 string for the PDF
+
+        // Get filename and ensure it ends with .pdf
+        let filename = "{{ highlighted_pdf_name }}";
+        if (!filename.toLowerCase().endsWith('.pdf')) {
+            filename += ".pdf";
+        }
+
+        // Create and trigger the download
+        const link = document.createElement('a');
+        link.href = "data:application/pdf;base64," + base64;
+        link.download = filename;
+        link.click();
+    }
+</script>
+
 </html>

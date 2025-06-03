@@ -36,6 +36,13 @@
                     </div>
                 </div>
                 <br>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                            <p style="color: red;">{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
             </div>    
         </section>
     </body>

@@ -19,9 +19,8 @@
 
         <!-- Action Buttons -->
         <div class="mt-4 d-flex justify-content-between">
-            <a href="{% url 'display_highlighted_pdf' highlighted_pdf_name %}" class="btn btn-primary" download>
-                Download Highlighted PDF
-            </a>
+            <button class="btn btn-primary" onclick="downloadPDF()">Download Highlighted PDF</button>
+
             <a href="/welcome" class="btn btn-secondary">
                 Back to Dashboard
             </a>

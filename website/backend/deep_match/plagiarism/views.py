@@ -10,6 +10,7 @@ import time
 import zipfile
 from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
+from django.contrib import messages
 
 def go_to_multiple_check(request):
     return render(request, 'plagiarism/multiple_check.html')
@@ -73,7 +74,9 @@ def upload_files(request):
                 
                 saved_name = fs.save(save_path, uploaded_file)
                 file_urls.append(fs.url(saved_name))
+        
 
+        messages.success(request, 'Files uploaded successfully!')
         return redirect('/welcome')
 
     return render(request, 'dashboard.html')
@@ -265,6 +268,7 @@ def check_single_file(request):
                     'plagiarism_percent': plagiarism_percent,
                     'checked_date': timezone.now()
                 })
+        
     
     return render(request, 'plagiarism/dashboard.html')
 
@@ -285,17 +289,62 @@ def check_multiple_files(request):
         
         # Loop through the files and save each one
         for uploaded_file in files:
-            file_content = uploaded_file.read()
-        
-            timestamp = int(time.time())  # e.g., 1712597802
-            unique_filename = f"{timestamp}_{uploaded_file.name}"
+            if uploaded_file.name.lower().endswith('.zip'):
+                with zipfile.ZipFile(uploaded_file, 'r') as zip_ref:
+                    for entry in zip_ref.namelist():
+                        # Skip directories and hidden files
+                        if entry.endswith('/') or entry.startswith('__MACOSX/'):
+                            continue
+                        # Get base name and extension
+                        base_name = os.path.basename(entry)
+                        entry_ext = os.path.splitext(base_name)[1].lower()
+
+                        if entry.endswith('.DS_Store'):
+                            continue
+                        else:
+                            save_dir = 'current_files/'
+                        
+                        timestamp = int(time.time())
+                        new_name = f"{timestamp}_{base_name}"
+                        save_path = os.path.join(save_dir, new_name)
+                        # Extract file data and save
+                        file_data = zip_ref.read(entry)
+                        content_file = ContentFile(file_data, name=new_name)
+                        saved_name = fs.save(save_path, content_file)
+                        file_urls.append(fs.url(saved_name))              
+            else:
+                file_content = uploaded_file.read()
             
-            # Save the uploaded file in "current_files" folder inside media/
-            uploaded_file_path = fs.save(f'current_files/{unique_filename}', uploaded_file)
+                timestamp = int(time.time())  # e.g., 1712597802
+                unique_filename = f"{timestamp}_{uploaded_file.name}"
+                
+                # Save the uploaded file in "current_files" folder inside media/
+                uploaded_file_path = fs.save(f'current_files/{unique_filename}', uploaded_file)
+                full_uploaded_path = os.path.join(settings.MEDIA_ROOT, uploaded_file_path)
+
+            print("All files uploaded successfully!")
+
+        # Path to the 'current_files' directory
+        current_files_dir = os.path.join(settings.MEDIA_ROOT, 'current_files')
+
+        # Loop through all files in the directory
+        for filename in os.listdir(current_files_dir):
+            file_path = os.path.join(current_files_dir, filename)
+
+            # Ensure it's a file (not a directory)
+            if os.path.isfile(file_path):
+                with open(file_path, 'rb') as f:
+                    file_content = f.read()
+            
+            uploaded_file_path = f'current_files/{filename}'  # Relative path from MEDIA_ROOT
             full_uploaded_path = os.path.join(settings.MEDIA_ROOT, uploaded_file_path)
-            
+
+            print()
+            print(f"Processing file: {str(filename)}")
+            print()
+          
             # Check if the file is a PDF
-            if uploaded_file.name.lower().endswith('.pdf'):
+            if uploaded_file_path.lower().endswith('.pdf'):
                 # Extract text and generate embeddings
                 text = extract_pdf_text(file_content)
                 sentences = get_sentences(text)
@@ -344,7 +393,7 @@ def check_multiple_files(request):
                     result_folder = os.path.join(settings.MEDIA_ROOT, "result")
                     os.makedirs(result_folder, exist_ok=True)
                     
-                    highlighted_pdf_name = f"highlighted_{unique_filename}"
+                    highlighted_pdf_name = f"highlighted_{str(filename)}"
                     highlighted_pdf_path = os.path.join(result_folder, highlighted_pdf_name)
                     
                     with open(highlighted_pdf_path, "wb") as f:
@@ -357,8 +406,8 @@ def check_multiple_files(request):
                     PlagiarismReport.objects.create(
                         session=session,
                         user=request.user,
-                        file_name=unique_filename,
-                        original_file_name=uploaded_file.name,
+                        file_name=str(filename),
+                        original_file_name=str(filename).split('_', 1)[1],
                         report_name=report_name,
                         uploaded_at=timezone.now(),
                         plagiarism_percent=plagiarism_percent,
@@ -411,7 +460,7 @@ def check_multiple_files(request):
                 result_folder = os.path.join(settings.MEDIA_ROOT, "result")
                 os.makedirs(result_folder, exist_ok=True)
 
-                highlighted_code_name = f"highlighted_{unique_filename}"
+                highlighted_code_name = f"highlighted_{str(filename)}"
                 highlighted_code_name  = highlighted_code_name .replace('.py', '.pdf')
                 highlighted_code_path = os.path.join(result_folder, highlighted_code_name)
                 highlighted_code = highlight_plagiarized_code(flagged_codes, highlighted_code_path)
@@ -427,8 +476,8 @@ def check_multiple_files(request):
                     PlagiarismReport.objects.create(
                         session=session,
                         user=request.user,
-                        file_name=unique_filename,
-                        original_file_name=uploaded_file.name,
+                        file_name=str(filename),
+                        original_file_name=str(filename).split('_', 1)[1],
                         report_name=report_name,
                         uploaded_at=timezone.now(),
                         plagiarism_percent=plagiarism_percent,
@@ -439,7 +488,17 @@ def check_multiple_files(request):
 
             reports = PlagiarismReport.objects.filter(session=session)
 
+        # Loop through all items in the directory
+        for filename in os.listdir(current_files_dir):
+            file_path = os.path.join(current_files_dir, filename)
+
+            # Only delete files (skip directories, if any)
+            if os.path.isfile(file_path):
+                os.remove(file_path)  # Delete the file
+                print(f"Deleted: {file_path}")
+                
         return render(request, 'plagiarism/report.html', {'reports': reports})
+    
     
     return redirect('welcome')
 

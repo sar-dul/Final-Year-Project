@@ -72,6 +72,18 @@
             <span>Already have an account? <a href='/login'>Login</a></span>
         </div>
         <br>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <p style="color: red;">{{ message }}</p>
+                {% elif message.tags == 'success' %}
+                    <h3 style="color: green;">{{ message }}</h3>
+                {% else %}
+                    <p>{{ message }}</p> 
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </div>
 </body>
 </html>
