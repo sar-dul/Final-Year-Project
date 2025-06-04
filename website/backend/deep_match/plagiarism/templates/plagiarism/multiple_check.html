@@ -11,14 +11,14 @@
     <!-- Back to Dashboard -->
     <div style="text-align: right; padding: 10px 20px;">
       <a href="/welcome"> 
-        <button style="background-color: #5874C6; color: white; border: none; padding: 6px 14px; border-radius: 8px; height: 35px; cursor: pointer;"><-- Back to Dashboard</button>
+        <button style="background-color: #5874C6; color: white; border: none; padding: 6px 14px; border-radius: 8px; height: 35px; cursor: pointer;">← Back to Dashboard</button>
       </a>
     </div>
 
     <div class="header-section">
       <h1>Plagiarism Check for Multiple Files</h1>
       <p>Upload multiple files for plagiarism detection in one go.</p>
-      <p>PDF and Python (.py) files.</p>
+      <p>PDF, Python (.py) and Zip files.</p>
 </div>
 
 <form method="POST" enctype="multipart/form-data" action="{% url 'check_multiple_files' %}">

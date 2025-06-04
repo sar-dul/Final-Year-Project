@@ -28,7 +28,7 @@
         <li onclick="showSection('upload', this)">
             <a href="#">
                 <i class='bx bxs-shopping-bag-alt'></i>
-                <span class="text">Upload</span>
+                <span class="text">Check</span>
             </a>
         </li>
         <li onclick="showSection('history', this)">
@@ -59,7 +59,7 @@
 {% block mainDashboard %}
     <div  class="head-title">
         <div class="left">
-            <h1> Welcome {{ request.user.username }} ({{ request.user.role }})!</h1>
+            <!-- <h1> Welcome {{ request.user.username }} ({{ request.user.role }})!</h1> -->
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
@@ -73,11 +73,11 @@
     </div>
 
     <ul class="box-info">
-        <li>
+        <li onclick="showSection('upload', this)" style="cursor: pointer;">
             <i class='bx bxs-up-arrow-circle' ></i>
             <span class="text">
-                <h3>Upload File</h3>
-                <p>[Go to Upload]</p>
+                <h3>Check Plagiarism</h3>
+                <p>[Go to Checker]</p>
             </span>
         </li>
         <li>
@@ -101,8 +101,6 @@
         <div class="order">
             <div class="head">
                 <h3>Recent Checks</h3>
-                <i class='bx bx-search' ></i>
-                <i class='bx bx-filter' ></i>
             </div>
             <table>
                 <thead>
@@ -130,8 +128,6 @@
         <div class="todo">
             <div class="head">
                 <h3>Statistics</h3>
-                <i class='bx bx-plus' ></i>
-                <i class='bx bx-filter' ></i>
             </div>
             
             {{ bar_graph|safe }}
@@ -144,14 +140,13 @@
 {% block mainUpload%}
 <div class="head-title">
     <div class="left">
-        <h1>Upload Your File</h1>
         <ul class="breadcrumb">
             <li>
                 <a href="#">Dashboard</a>
             </li>
             <li><i class='bx bx-chevron-right'></i></li>
             <li>
-                <a class="active" href="#">Upload</a>
+                <a class="active" href="#">Check</a>
             </li>
         </ul>
     </div>
@@ -159,7 +154,7 @@
 
 <div class="container">
     <div class="header-section">
-        <h1>Upload Your File</h1>
+        <h1>Check Your File</h1>
         <p>Upload the file you want to check for plagiarism.</p>
         <p>Only .py and .pdf files are allowed.</p>
     </div>
@@ -191,7 +186,6 @@
 {% block mainHistory %}
     <div  class="head-title">
         <div class="left">
-            <h1>Your History</h1>
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
@@ -207,7 +201,7 @@
     <div class="table-data">
         <div class="order">
             <div class="head">
-                <h3>Recent Checks</h3>
+                <h3>Your History</h3>
                 <i class='bx bx-search' ></i>
                 <i class='bx bx-filter' ></i>
             </div>

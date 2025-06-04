@@ -44,8 +44,6 @@ def register(request):
         if password != confirm_password:
             errors.append("Passwords do not match.")
 
-        # You can add more validations here...
-
         # If there are errors, show them all
         if errors:
             for error in errors:

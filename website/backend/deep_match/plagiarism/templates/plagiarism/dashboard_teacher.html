@@ -12,10 +12,13 @@
 {% block scripts %}
     <script src="{% static 'js/dashboard.js' %}"></script>
     {% if messages %}
-        <script>
-            // Only show the first message
-            alert("File(s) Uploaded Successfully!");
-        </script>
+        {% for message in messages %}
+            {% if forloop.first %}
+                <script>
+                    alert("{{ message|escapejs }}");
+                </script>
+            {% endif %}
+        {% endfor %}
     {% endif %}
 {% endblock %}
 
@@ -70,7 +73,7 @@
 {% block mainDashboard %}
     <div  class="head-title">
         <div class="left">
-            <h1> Welcome {{ request.user.username }} ({{ request.user.role }})!</h1>
+            <!-- <h1> Welcome {{ request.user.username }} ({{ request.user.role }})!</h1> -->
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
@@ -84,13 +87,15 @@
     </div>
 
     <ul class="box-info">
-        <li>
-            <i class='bx bxs-up-arrow-circle' ></i>
-            <span class="text">
-                <h3>Check Plagiarism</h3>
-                <p>[Go to Checker]</p>
-            </span>
-        </li>
+        <a href="{% url 'multiple_check' %}" style="text-decoration: none; color: inherit;">
+            <li>
+                <i class='bx bxs-up-arrow-circle'></i>
+                <span class="text">
+                    <h3>Check Plagiarism</h3>
+                    <p>[Go to Checker]</p>
+                </span>
+            </li>
+        </a>
         <li>
             <i class='bx bxs-bar-chart-alt-2' ></i>
             <span class="text">
@@ -112,8 +117,6 @@
         <div class="order">
             <div class="head">
                 <h3>Recent Checks</h3>
-                <i class='bx bx-search' ></i>
-                <i class='bx bx-filter' ></i>
             </div>
             <table>
                 <thead>
@@ -141,8 +144,6 @@
         <div class="todo">
             <div class="head">
                 <h3>Statistics</h3>
-                <i class='bx bx-plus' ></i>
-                <i class='bx bx-filter' ></i>
             </div>
             {{ bar_graph_teacher|safe }}
         </div>
@@ -153,7 +154,6 @@
 {% block mainUpload%}
     <div  class="head-title">
         <div class="left">
-            <h1>Upload Your Files</h1>
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
@@ -168,9 +168,9 @@
 
     <div class="container">
         <div class="header-section">
-            <h1>Upload Files</h1>
-            <p>Upload files you want to share with your team members.</p>
-            <p>PDF, Images & Videos are allowed.</p>
+            <h1>Upload Your Files</h1>
+            <p>Upload files you want to store in the database to compare.</p>
+            <p>Only .py, .pdf and .zip files are allowed.</p>
         </div>
 
         <form method="POST" enctype="multipart/form-data" action="{% url 'upload_files' %}">
@@ -203,7 +203,6 @@
 {% block mainHistory%}
     <div  class="head-title">
         <div class="left">
-            <h1>Your History</h1>
             <ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
@@ -219,9 +218,7 @@
     <div class="table-data">
         <div class="order">
             <div class="head">
-                <h3>Recent Checks</h3>
-                <i class='bx bx-search' ></i>
-                <i class='bx bx-filter' ></i>
+                <h3>Your History</h3>
             </div>
             <table>
                 <thead>
