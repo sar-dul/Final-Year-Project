@@ -1,0 +1,35 @@
+<!-- templates/plagiarism/error.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            text-align: center;
+            padding-top: 100px;
+        }
+        .error-container {
+            display: inline-block;
+            padding: 30px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Error</h1>
+        <p>{{ message }}</p>
+        <a href="{% url 'welcome' %}">Return to Home</a>
+    </div>
+</body>
+</html>

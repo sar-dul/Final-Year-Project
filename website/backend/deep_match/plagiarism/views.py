@@ -28,6 +28,8 @@ def upload_files(request):
         file_urls = []
         fs = FileSystemStorage()
 
+        timestamp = int(time.time())  # e.g., 1712597802
+
         for uploaded_file in files:
             file_ext = os.path.splitext(uploaded_file.name)[1].lower()
 
@@ -56,21 +58,25 @@ def upload_files(request):
                         else:
                             save_dir = 'existing_files/others/'
                         
+                        unique_filename = f"{timestamp}_{base_name}"
+                        
                         # Create full save path and ensure filename security
-                        save_path = os.path.join(save_dir, base_name)
+                        save_path = os.path.join(save_dir, unique_filename)
                         # Extract file data and save
                         file_data = zip_ref.read(entry)
-                        content_file = ContentFile(file_data, name=base_name)
+                        content_file = ContentFile(file_data, name=unique_filename)
                         saved_name = fs.save(save_path, content_file)
                         file_urls.append(fs.url(saved_name))
             else:
+                unique_filename = f"{timestamp}_{uploaded_file.name}"
+
                 # Handle regular files
                 if file_ext == '.py':
-                    save_path = f'existing_files/code/{uploaded_file.name}'
+                    save_path = f'existing_files/code/{unique_filename}'
                 elif file_ext == '.pdf':
-                    save_path = f'existing_files/pdf/{uploaded_file.name}'
+                    save_path = f'existing_files/pdf/{unique_filename}'
                 else:
-                    save_path = f'existing_files/others/{uploaded_file.name}'
+                    save_path = f'existing_files/others/{unique_filename}'
                 
                 saved_name = fs.save(save_path, uploaded_file)
                 file_urls.append(fs.url(saved_name))
@@ -120,6 +126,7 @@ def check_single_file(request):
 
             # Check if the directory exists
             if not os.path.exists(existing_files_dir):
+                clear_current()
                 return render(request, 'plagiarism/error.html', {"message": "Comparison directory not found."})
 
             # Get a list of all PDF files in the directory
@@ -127,6 +134,7 @@ def check_single_file(request):
 
             # Check if there are any PDF files to process
             if not pdf_files:
+                clear_current()
                 return render(request, 'plagiarism/error.html', {"message": "No PDF files found in the comparison directory."})
 
             # Initialize a list to store embeddings
@@ -181,6 +189,8 @@ def check_single_file(request):
                     highlighted_file_path=highlighted_pdf_path,
                     base64_pdf=base64_pdf,
                 )
+
+                clear_current()
                 
                 return render(request, 'plagiarism/result.html', {
                     'file_url': fs.url(uploaded_file_path),
@@ -200,6 +210,7 @@ def check_single_file(request):
 
             # Check if the directory exists
             if not os.path.exists(existing_files_dir):
+                clear_current()
                 return render(request, 'plagiarism/error.html', {"message": "Comparison directory not found."})
 
             # Get a list of all PDF files in the directory
@@ -207,6 +218,7 @@ def check_single_file(request):
 
             # Check if there are any PDF files to process
             if not code_files:
+                clear_current()
                 return render(request, 'plagiarism/error.html', {"message": "No PDF files found in the comparison directory."})
 
             # Initialize a list to store embeddings
@@ -261,6 +273,8 @@ def check_single_file(request):
                     base64_pdf=base64_code,
                 )
 
+                clear_current()  # Clear the current files after processing
+
                 return render(request, 'plagiarism/result.html', {
                     'file_url': fs.url(uploaded_file_path),
                     'highlighted_pdf_name': highlighted_code_name,
@@ -269,7 +283,18 @@ def check_single_file(request):
                     'checked_date': timezone.now()
                 })
         
-    
+    # Path to the 'current_files' directory
+    current_files_dir = os.path.join(settings.MEDIA_ROOT, 'current_files')
+
+    # Loop through all items in the directory
+    for filename in os.listdir(current_files_dir):
+        file_path = os.path.join(current_files_dir, filename)
+
+        # Only delete files (skip directories, if any)
+        if os.path.isfile(file_path):
+            os.remove(file_path)  # Delete the file
+            print(f"Deleted: {file_path}")
+            
     return render(request, 'plagiarism/dashboard.html')
 
 
@@ -355,6 +380,7 @@ def check_multiple_files(request):
 
                 # Check if the directory exists
                 if not os.path.exists(existing_files_dir):
+                    clear_current()
                     return render(request, 'plagiarism/error.html', {"message": "Comparison directory not found."})
 
                 # Get a list of all PDF files in the directory
@@ -362,6 +388,7 @@ def check_multiple_files(request):
 
                 # Check if there are any PDF files to process
                 if not pdf_files:
+                    clear_current()
                     return render(request, 'plagiarism/error.html', {"message": "No PDF files found in the comparison directory."})
 
                 # Initialize a list to store embeddings
@@ -426,6 +453,7 @@ def check_multiple_files(request):
 
                 # Check if the directory exists
                 if not os.path.exists(existing_files_dir):
+                    clear_current()
                     return render(request, 'plagiarism/error.html', {"message": "Comparison directory not found."})
 
                 # Get a list of all PDF files in the directory
@@ -433,6 +461,7 @@ def check_multiple_files(request):
 
                 # Check if there are any PDF files to process
                 if not code_files:
+                    clear_current()
                     return render(request, 'plagiarism/error.html', {"message": "No PDF files found in the comparison directory."})
 
                 # Initialize a list to store embeddings
@@ -488,14 +517,7 @@ def check_multiple_files(request):
 
             reports = PlagiarismReport.objects.filter(session=session)
 
-        # Loop through all items in the directory
-        for filename in os.listdir(current_files_dir):
-            file_path = os.path.join(current_files_dir, filename)
-
-            # Only delete files (skip directories, if any)
-            if os.path.isfile(file_path):
-                os.remove(file_path)  # Delete the file
-                print(f"Deleted: {file_path}")
+        clear_current()  # Clear the current files after processing
                 
         return render(request, 'plagiarism/report.html', {'reports': reports})
     
@@ -529,6 +551,17 @@ def result_view(request, report_id):
 
     return render(request, 'plagiarism/result.html', context)
 
-def files_from_zip():
-    # This function is not implemented in the provided code.
-    pass
+def clear_current():
+    # Path to the 'current_files' directory
+    current_files_dir = os.path.join(settings.MEDIA_ROOT, 'current_files')
+    
+     # Loop through all items in the directory
+    for filename in os.listdir(current_files_dir):
+        file_path = os.path.join(current_files_dir, filename)
+
+        # Only delete files (skip directories, if any)
+        if os.path.isfile(file_path):
+            os.remove(file_path)  # Delete the file
+            print(f"Deleted: {file_path}")
+    
+    return None

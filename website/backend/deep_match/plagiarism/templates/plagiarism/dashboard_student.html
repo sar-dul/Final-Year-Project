@@ -100,36 +100,16 @@
     <div class="table-data">
         <div class="order">
             <div class="head">
-                <h3>Recent Checks</h3>
+                <h3>Plagiarism Trend</h3>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>File Name</th>
-                        <th>Date</th>
-                        <th>Plagiarism</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for report in reports %}
-                    <tr>
-                        <td>{{ report.original_file_name }}</td>
-                        <td>{{ report.uploaded_at|date:"d-m-Y" }}</td>
-                        <td>{{ report.plagiarism_percent }} %</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3">No reports available.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+            {{ line_graph|safe }}
         </div>
         <div class="todo">
             <div class="head">
-                <h3>Statistics</h3>
+                <h3>Plagiarism Report Couns</h3>
             </div>
-            
+
             {{ bar_graph|safe }}
 
         </div>
@@ -169,7 +149,7 @@
                 <span>Drag & Drop your file here</span>
                 <span>OR</span>
                 <button type="button" class="file-selector">Browse Files</button>
-                <input type="file" class="file-selector-input" name="file" accept=".py, .pdf">
+                <input type="file" class="file-selector-input" name="file" accept=".py, .pdf" required>
             </div>
         </div>
         <div class="list-section">
